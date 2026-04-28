@@ -67,7 +67,7 @@
         .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
         .h-icon { font-size: 1.4rem; }
         .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; }
-        .h-walk { font-size: 0.75rem; font-weight: 900; margin-top: 2px; }
+        .h-walk, .h-wash { font-size: 0.75rem; font-weight: 900; margin-top: 1px; }
 
         /* ── 明日の天気（1行） ── */
         .tomorrow-inline {
@@ -95,7 +95,7 @@
             background: rgba(255,255,255,0.9); border-radius: 15px;
             padding: 12px 15px; border: 1px solid rgba(0,0,0,0.05);
             display: flex; flex-direction: column; gap: 4px;
-            text-align: center; /* すべて中央揃え */
+            text-align: center;
         }
         .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .nm-date   { font-size: 0.9rem; font-weight: 900; color: var(--text-main); margin-top: 2px; }
@@ -225,8 +225,6 @@
             el.innerHTML = `<div style="font-size:0.7rem;color:#aaa;text-align:center">今季の全試合が終了しました。</div>`;
             return;
         }
-
-        // ホーム・アウェイに関わらず、データの順序（home vs away）を維持
         const homeDisplay = `<span>${match.home}<span class="nm-rank">${match.homeRank}位</span></span>`;
         const awayDisplay = `<span>${match.away}<span class="nm-rank">${match.awayRank}位</span></span>`;
         const teamLayout = `${homeDisplay}<span class="nm-vs">vs</span>${awayDisplay}`;
@@ -275,6 +273,8 @@
             if(t.includes(todayStr) && h >= hr && h <= sunsetH) {
                 const prob = data.hourly.precipitation_probability[i];
                 const walkIcon = prob <= 20 ? '<span style="color:var(--ok)">🐾◎</span>' : prob <= 40 ? '<span style="color:var(--warn)">🐾△</span>' : '<span style="color:var(--ng)">🐾✕</span>';
+                // 洗濯判定の追加
+                const washIcon = prob <= 10 ? '<span style="color:var(--ok)">🧺◎</span>' : prob <= 30 ? '<span style="color:var(--ok)">🧺○</span>' : prob <= 50 ? '<span style="color:var(--warn)">🧺△</span>' : '<span style="color:var(--ng)">🧺✕</span>';
                 
                 hBox.innerHTML += `
                     <div class="hourly-item">
@@ -282,6 +282,7 @@
                         <div class="h-icon">${weatherIcons[data.hourly.weather_code[i]]}</div>
                         <div class="h-prob">${prob}%</div>
                         <div class="h-walk">${walkIcon}</div>
+                        <div class="h-wash">${washIcon}</div>
                     </div>`;
             }
         });
