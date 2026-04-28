@@ -43,9 +43,9 @@
         /* ── 名言 ── */
         #quote-section {
             text-align: center; padding: 5px 10px 15px;
-            min-height: 3.2em; display: flex; flex-direction: column; justify-content: center;
+            min-height: 4.2em; display: flex; flex-direction: column; justify-content: center;
         }
-        .q-text { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); line-height: 1.5; }
+        .q-text { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); line-height: 1.5; padding: 0 10px; }
         .q-author { font-size: 0.65rem; color: #a1887f; margin-top: 4px; font-weight: 700; }
 
         .glass-card {
@@ -76,6 +76,7 @@
             border-radius: 12px; font-size: 0.75rem; font-weight: 700;
             color: var(--text-sub); border: 1px solid rgba(0,0,0,0.03);
         }
+        .tmr-temp-box { letter-spacing: -1px; }
 
         /* ── ピクミン ── */
         .p-container { display: flex; flex-direction: column; gap: 8px; }
@@ -89,16 +90,18 @@
         .w-item { flex: 1; text-align: center; font-size: 0.7rem; font-weight: 700; }
         .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; }
 
-        /* ── サッカー次節ボックス (iPhone 16e向け調整) ── */
+        /* ── サッカー次節ボックス ── */
         .match-box {
             background: rgba(255,255,255,0.9); border-radius: 15px;
             padding: 12px 15px; border: 1px solid rgba(0,0,0,0.05);
             display: flex; flex-direction: column; gap: 4px;
+            text-align: center; /* すべて中央揃え */
         }
-        .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; gap: 5px; }
+        .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .nm-date   { font-size: 0.9rem; font-weight: 900; color: var(--text-main); margin-top: 2px; }
-        .nm-teams  { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: flex-start; gap: 8px; margin: 2px 0; }
-        .nm-vs     { font-size: 0.7rem; color: #ccc; font-weight: 900; }
+        .nm-teams  { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 4px 0; }
+        .nm-vs     { font-size: 0.65rem; color: #ccc; font-weight: 900; margin: 0 4px; }
+        .nm-rank   { font-size: 0.6rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; vertical-align: middle; }
         .nm-venue  { font-size: 0.7rem; color: #a1887f; font-weight: 700; margin-top: 2px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 4px; }
 
         .dot { height: 6px; width: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
@@ -116,8 +119,8 @@
     </header>
 
     <div id="quote-section">
-        <div class="q-text" id="q-text">Stay hungry, Stay foolish.</div>
-        <div class="q-author" id="q-author">― Steve Jobs</div>
+        <div class="q-text" id="q-text">読み込み中...</div>
+        <div class="q-author" id="q-author"></div>
     </div>
 
     <section class="glass-card">
@@ -159,42 +162,48 @@
     const JOETSU = {
         name: "上越",
         rank: 8,
+        homeVenue: "新井総合公園",
         schedule: [
-            { round: 5,  date: "2026-05-03", label: "5/3(土)",  time: "14:00", opponent: "松本国際",    oppRank: 1,  venue: "松本市サッカー場" },
-            { round: 6,  date: "2026-05-10", label: "5/10(土)", time: "10:30", opponent: "富山第一",    oppRank: 6,  venue: "新井総合公園" },
-            { round: 7,  date: "2026-05-16", label: "5/16(土)", time: "11:00", opponent: "帝京長岡2nd", oppRank: 9,  venue: "帝京長岡" },
-            { round: 8,  date: "2026-05-23", label: "5/23(土)", time: "10:30", opponent: "富山U18",      oppRank: 10, venue: "新井総合公園" },
-            { round: 9,  date: "2026-06-13", label: "6/13(土)", time: "10:30", opponent: "星稜",          oppRank: 4,  venue: "新井総合公園" },
-            { round: 10, date: "2026-06-27", label: "6/27(土)", time: "10:30", opponent: "新潟U18",      oppRank: 3,  venue: "新井総合公園" },
+            { round: 5,  date: "2026-05-03", label: "5/3(土)",  time: "14:00", home: "松本国際", homeRank: 1,  away: "上越", awayRank: 8, venue: "松本市サッカー場" },
+            { round: 6,  date: "2026-05-10", label: "5/10(土)", time: "10:30", home: "上越", homeRank: 8,  away: "富山第一", awayRank: 6, venue: "新井総合公園" },
+            { round: 7,  date: "2026-05-16", label: "5/16(土)", time: "11:00", home: "帝京長岡2nd", homeRank: 9,  away: "上越", awayRank: 8, venue: "帝京長岡" },
+            { round: 8,  date: "2026-05-23", label: "5/23(土)", time: "10:30", home: "上越", homeRank: 8,  away: "富山U18", awayRank: 10, venue: "新井総合公園" },
+            { round: 9,  date: "2026-06-13", label: "6/13(土)", time: "10:30", home: "上越", homeRank: 8,  away: "星稜", awayRank: 4, venue: "新井総合公園" },
+            { round: 10, date: "2026-06-27", label: "6/27(土)", time: "10:30", home: "上越", homeRank: 8,  away: "新潟U18", awayRank: 3, venue: "新井総合公園" },
         ]
     };
 
     const QUOTES = [
         { text: "ハングリーであれ。愚かであれ。", author: "Steve Jobs" },
         { text: "あなたの時間は限られている。他人の人生を生きて無駄にしてはいけない。", author: "Steve Jobs" },
-        { text: "イノベーションは、誰をリーダーにし、誰をフォロワーにするかを決定づける。", author: "Steve Jobs" },
-        { text: "墓場で一番の金持ちになることに意味はない。夜寝る時、素晴らしい事をしたと言えることが重要だ。", author: "Steve Jobs" },
-        { text: "もし今日が人生最後の日だとしたら、私は今日することをしたいと思うだろうか？", author: "Steve Jobs" },
-        { text: "美しい家具を作る職人は、誰も見ないからといって、タンスの裏側に安物の合板を使ったりはしない。", author: "Steve Jobs" },
-        { text: "前を向いて点をつなぐことはできない。後ろを振り返ってつなぐことしかできない。", author: "Steve Jobs" },
-        { text: "量より質が重要だ。2つの二塁打より、1つの本塁打の方がずっといい。", author: "Steve Jobs" },
-        { text: "自分もいつかは死ぬと考えることは、失うものがあるという思考の罠を避ける最良の方法だ。", author: "Steve Jobs" },
-        { text: "独創的である必要はない。ただ、圧倒的に優れていればいい。", author: "Steve Jobs" },
-        { text: "終着点は重要じゃない。旅の途中でどれだけ楽しい思いができるかが大事なんだ。", author: "Steve Jobs" },
-        { text: "何をしないかを決めることは、何をするかを決めるのと同じくらい大事だ。", author: "Steve Jobs" },
-        { text: "顧客は、形にして見せてもらうまで、自分が何が欲しいか分からないものだ。", author: "Steve Jobs" },
-        { text: "地局の重要性を理解している人間は、細部を疎かにはしない。", author: "Steve Jobs" },
-        { text: "成功と失敗の一番の違いは、途中で諦めるか諦めないかだ。", author: "Steve Jobs" },
-        { text: "直感は知性よりも強力だ。", author: "Steve Jobs" },
-        { text: "シンプルであることは、複雑であることよりも難しい。", author: "Steve Jobs" },
-        { text: "私たちがしていることのほとんどは、誰か他の人が作ったものの上に成り立っている。", author: "Steve Jobs" },
-        { text: "宇宙に衝撃を与えよう。", author: "Steve Jobs" },
-        { text: "一つのことを成し遂げるには、それ以外の100の素晴らしいアイデアに「NO」と言う必要がある。", author: "Steve Jobs" },
+        { text: "素晴らしい仕事をする唯一の方法は、その仕事を愛することだ。", author: "Steve Jobs" },
+        { text: "失敗は、より賢明に再挑戦するための機会にすぎない。", author: "Henry Ford" },
+        { text: "地獄の真っ只中にいるのなら、そのまま突き進め。", author: "Winston Churchill" },
+        { text: "未来を予測する最良の方法は、それを発明することだ。", author: "Alan Kay" },
+        { text: "情熱を失わずに失敗を重ね続けられるのが成功だ。", author: "Winston Churchill" },
+        { text: "他人の意見という雑音に、自分の内なる声をかき消されてはいけない。", author: "Steve Jobs" },
+        { text: "失敗を恐れるな。そこから学び、再び立ち上がるのだ。", author: "Soichiro Honda" },
+        { text: "行動を伴わないビジョンは、ただの白昼夢。ビジョンのない行動は、ただの悪夢だ。", author: "Japanese Proverb" },
+        { text: "最も困難なことは、行動を決断することだ。あとはただ粘り強さがあるかどうかだ。", author: "Amelia Earhart" },
+        { text: "できると思えばできる、できないと思えばできない。どちらも正しい。", author: "Henry Ford" },
+        { text: "リスクを負わないこと。それが最大のリスクだ。", author: "Mark Zuckerberg" },
+        { text: "今日の成果は、昨日の熱意の賜物である。", author: "Jeff Bezos" },
+        { text: "世の中には、勝利よりも大切な敗北がある。", author: "Soichiro Honda" },
+        { text: "常に「なぜ？」と問い続けなさい。それが革新の始まりだ。", author: "Elon Musk" },
+        { text: "人生は公平ではない。そのことに慣れよう。", author: "Bill Gates" },
+        { text: "他人の期待に合わせて生きてはいけない。自分の本能に従え。", author: "Elon Musk" },
+        { text: "何かを始めるためには、喋るのをやめて行動し始めることだ。", author: "Walt Disney" },
+        { text: "一度の失敗で落胆してはいけない。そこには成功へのヒントが隠されている。", author: "Jeff Bezos" },
+        { text: "20歳の顔は自然の贈り物。50歳の顔はあなたの功績だ。", author: "Coco Chanel" },
+        { text: "成功は、決断の速さと実行の粘り強さで決まる。", author: "Elon Musk" },
+        { text: "変化を恐れる者は、脱落する。", author: "Bill Gates" },
+        { text: "自分の価値を他人に決めさせてはいけない。", author: "Coco Chanel" },
+        { text: "明日、死ぬかのように生きなさい。永遠に生きるかのように学びなさい。", author: "Mahatma Gandhi" }
     ];
-    while(QUOTES.length < 100) { QUOTES.push(QUOTES[Math.floor(Math.random()*20)]); }
+    while(QUOTES.length < 100) { QUOTES.push(QUOTES[Math.floor(Math.random()*QUOTES.length)]); }
 
     function renderQuote() {
-        const orderKey = 'pik_qorder_jobs', idxKey = 'pik_qidx_jobs';
+        const orderKey = 'pik_qorder_biz', idxKey = 'pik_qidx_biz';
         let order = JSON.parse(localStorage.getItem(orderKey) || 'null');
         let idx   = parseInt(localStorage.getItem(idxKey) || '0');
         if (!order || idx >= order.length) {
@@ -216,14 +225,16 @@
             el.innerHTML = `<div style="font-size:0.7rem;color:#aaa;text-align:center">今季の全試合が終了しました。</div>`;
             return;
         }
+
+        // ホーム・アウェイに関わらず、データの順序（home vs away）を維持
+        const homeDisplay = `<span>${match.home}<span class="nm-rank">${match.homeRank}位</span></span>`;
+        const awayDisplay = `<span>${match.away}<span class="nm-rank">${match.awayRank}位</span></span>`;
+        const teamLayout = `${homeDisplay}<span class="nm-vs">vs</span>${awayDisplay}`;
+
         el.innerHTML = `
             <div class="nm-header">⚽ 第${match.round}節</div>
             <div class="nm-date">${match.label} ${match.time || ''} Kick Off</div>
-            <div class="nm-teams">
-                <span>${JOETSU.name}</span>
-                <span class="nm-vs">vs</span>
-                <span>${match.opponent}</span>
-            </div>
+            <div class="nm-teams">${teamLayout}</div>
             <div class="nm-venue">📍 ${match.venue}</div>
         `;
     }
@@ -248,24 +259,21 @@
     function renderData(data) {
         const now = new Date(); const hr = now.getHours(); const todayStr = now.toLocaleDateString('sv');
 
-        // 明日の1行表示
         const tmrMax = Math.round(data.daily.temperature_2m_max[1]), tmrMin = Math.round(data.daily.temperature_2m_min[1]);
         const tmrIcon = weatherIcons[data.daily.weather_code[1]];
         document.getElementById('tomorrow-box').innerHTML = `
             <span>明日 ${tmrIcon}</span>
-            <span style="color:var(--ng)">${tmrMax}</span>/<span style="color:#03a9f4">${tmrMin}</span>
+            <span class="tmr-temp-box"><span style="color:var(--ng)">${tmrMax}</span><span style="margin:0 -1px">/</span><span style="color:#03a9f4">${tmrMin}</span></span>
             <span>💨${(data.hourly.windspeed_10m[24+10]/3.6).toFixed(1)}m</span>
             <span>🚲${tmrMax>15?'◎':'○'}</span><span>🧺${data.daily.weather_code[1]<3?'◎':'△'}</span>
         `;
 
-        // 24h & 散歩判定
         const sunsetH = parseInt(data.daily.sunset[0].split('T')[1]);
         const hBox = document.getElementById('hourly-list'); hBox.innerHTML = '';
         data.hourly.time.forEach((t, i) => {
             const h = parseInt(t.split('T')[1]);
             if(t.includes(todayStr) && h >= hr && h <= sunsetH) {
                 const prob = data.hourly.precipitation_probability[i];
-                // 散歩判定：20%以下◎, 40%以下△, それ以上✕
                 const walkIcon = prob <= 20 ? '<span style="color:var(--ok)">🐾◎</span>' : prob <= 40 ? '<span style="color:var(--warn)">🐾△</span>' : '<span style="color:var(--ng)">🐾✕</span>';
                 
                 hBox.innerHTML += `
@@ -278,7 +286,6 @@
             }
         });
 
-        // 週間
         const wBox = document.getElementById('weekly-list'); wBox.innerHTML = '';
         const days = ['日','月','火','水','木','金','土'];
         for(let i=0; i<7; i++) {
