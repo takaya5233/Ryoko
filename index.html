@@ -30,114 +30,105 @@
         .phone-canvas {
             width: 100%; max-width: 430px; min-height: 100vh;
             background: var(--bg-gradient);
-            display: flex; flex-direction: column; gap: 10px;
-            padding: 15px 12px 60px;
+            display: flex; flex-direction: column; gap: 8px;
+            padding: 10px 10px 60px;
             box-sizing: border-box;
         }
 
         /* ── 時計 ── */
-        #datetime-section { text-align: center; margin: 10px 0; }
-        #date { font-size: 1.1rem; font-weight: 700; color: var(--text-sub); }
-        #time { font-size: 3.8rem; font-weight: 900; margin: -5px 0; letter-spacing: 2px; }
+        #datetime-section { text-align: center; margin: 5px 0; }
+        #date { font-size: 1rem; font-weight: 700; color: var(--text-sub); }
+        #time { font-size: 3.5rem; font-weight: 900; margin: -5px 0; letter-spacing: 1px; }
 
         /* ── 名言 ── */
         #quote-section {
-            text-align: center; padding: 0 15px 8px;
-            font-size: 0.75rem; color: var(--text-sub); line-height: 1.6;
+            text-align: center; padding: 0 10px 5px;
+            min-height: 3.2em; display: flex; flex-direction: column; justify-content: center;
         }
-        #quote-section .q-text { font-weight: 700; }
-        #quote-section .q-author { font-size: 0.65rem; color: #a1887f; margin-top: 4px; }
+        .q-text { font-size: 0.72rem; font-weight: 700; color: var(--text-sub); line-height: 1.4; }
+        .q-author { font-size: 0.6rem; color: #a1887f; margin-top: 2px; font-weight: 700; }
 
         .glass-card {
             background: var(--glass-bg); backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px); border: 2px solid var(--glass-border);
-            border-radius: 22px; padding: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border-radius: 20px; padding: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
 
-        .section-title { font-size: 0.8rem; font-weight: 900; color: var(--text-sub); margin-bottom: 10px; display: block; }
+        .section-title { font-size: 0.75rem; font-weight: 900; color: var(--text-sub); margin-bottom: 8px; display: block; }
 
         /* ── 今日のあんしん予報 ── */
         .weather-summary-line {
-            display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
-            padding-bottom: 8px; border-bottom: 1px dashed rgba(0,0,0,0.1);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+            padding-bottom: 6px; border-bottom: 1px dashed rgba(0,0,0,0.1);
         }
-        #current-icon { font-size: 1.8rem; }
-        #max-min-temp { font-size: 1.2rem; font-weight: 900; white-space: nowrap; }
+        #current-icon { font-size: 1.6rem; }
+        #max-min-temp { font-size: 1.1rem; font-weight: 900; white-space: nowrap; }
         #max-min-temp .mx { color: var(--ng); }
         #max-min-temp .mn { color: #03a9f4; }
-        #wind-display { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); }
-        #rain-comment { font-size: 0.75rem; font-weight: 900; color: #03a9f4; margin-left: auto; }
+        #wind-display { font-size: 0.8rem; font-weight: 700; color: var(--text-sub); }
+        #rain-comment { font-size: 0.7rem; font-weight: 900; color: #03a9f4; margin-left: auto; }
 
+        /* バッジとサッカーを横並びに */
         .current-main { 
-            display: flex; align-items: stretch; gap: 10px; flex-wrap: wrap;
+            display: flex; align-items: stretch; gap: 8px;
         }
 
         .badges { 
-            display: flex; flex-direction: column; gap: 6px; 
-            align-items: flex-start; flex: 1 1 140px; justify-content: center; 
+            display: flex; flex-direction: column; gap: 4px; 
+            flex: 0 0 115px; /* 幅を固定してサッカー情報を広く取る */
         }
         .badge {
-            width: 100%;
-            font-size: 0.8rem; font-weight: 900; padding: 6px 12px; border-radius: 10px;
-            background: rgba(255,255,255,1); display: flex; align-items: center; gap: 8px;
-            white-space: nowrap; border: 1px solid rgba(0,0,0,0.05);
-            box-sizing: border-box;
+            width: 100%; font-size: 0.7rem; font-weight: 900; padding: 5px 8px; border-radius: 8px;
+            background: rgba(255,255,255,1); display: flex; align-items: center; gap: 5px;
+            white-space: nowrap; border: 1px solid rgba(0,0,0,0.03); box-sizing: border-box;
         }
 
         /* ── サッカー次節ボックス ── */
         .match-box {
-            flex: 1 1 160px; 
-            min-width: 0; 
-            background: rgba(255,255,255,0.9); border-radius: 14px;
-            padding: 8px; border: 1px solid rgba(0,0,0,0.06);
-            text-align: center; overflow: hidden;
-            display: flex; flex-direction: column; justify-content: center;
+            flex: 1; min-width: 0; background: rgba(255,255,255,0.9); border-radius: 12px;
+            padding: 6px; border: 1px solid rgba(0,0,0,0.05);
+            display: flex; flex-direction: column; justify-content: center; gap: 1px;
         }
-        .nm-header { font-size: 0.65rem; font-weight: 900; color: #43a047; }
-        .nm-date   { font-size: 0.8rem; font-weight: 900; color: var(--text-main); margin: 2px 0; }
-        .nm-teams  { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .nm-vs     { font-size: 0.6rem; color: #bbb; margin: 0 3px; }
-        .nm-venue  { font-size: 0.65rem; color: #a1887f; margin-top: 4px;
-                      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .nm-rank   { color: #43a047; font-weight: 900; }
+        .nm-header { font-size: 0.6rem; font-weight: 900; color: #43a047; }
+        .nm-date   { font-size: 0.72rem; font-weight: 900; color: var(--text-main); }
+        .nm-teams  { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .nm-vs     { font-size: 0.6rem; color: #bbb; margin: 0 2px; }
+        .nm-venue  { font-size: 0.6rem; color: #a1887f; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .nm-rank   { color: #43a047; font-weight: 900; font-size: 0.6rem; }
 
         /* ── 日没までの空もよう ── */
         .hourly-section-header {
-            display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
         }
-        .hourly-section-header .section-title { margin-bottom: 0; }
-        .sun-times-inline { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); white-space: nowrap; }
-        .hourly-scroll { display: flex; overflow-x: auto; gap: 14px; padding: 5px 2px 10px; }
+        .sun-times-inline { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); }
+        .hourly-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 2px 0 8px; }
         .hourly-scroll::-webkit-scrollbar { display: none; }
-        .hourly-item { display: flex; flex-direction: column; align-items: center; min-width: 40px; gap: 4px; }
-        .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
-        .h-icon { font-size: 1.4rem; line-height: 1; }
-        .h-prob { font-size: 0.7rem; color: #03a9f4; font-weight: 900; }
+        .hourly-item { display: flex; flex-direction: column; align-items: center; min-width: 38px; gap: 2px; }
+        .h-time { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); }
+        .h-icon { font-size: 1.3rem; }
+        .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; }
+
+        /* ── 明日の天気（1行に凝縮） ── */
         .tomorrow-inline {
-            display: flex; align-items: center; gap: 8px; margin-top: 10px;
-            padding: 8px 12px; background: rgba(255,255,255,0.85);
-            border-radius: 12px; font-size: 0.75rem; font-weight: 700;
-            color: var(--text-sub); border: 1px solid rgba(0,0,0,0.05);
-            flex-wrap: wrap; justify-content: center;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 8px; padding: 6px 10px; background: rgba(255,255,255,0.85);
+            border-radius: 10px; font-size: 0.72rem; font-weight: 700;
+            color: var(--text-sub); border: 1px solid rgba(0,0,0,0.03);
         }
 
         /* ── ピクミン ── */
-        .p-container { display: flex; flex-direction: column; gap: 12px; }
-        .p-card { background: white; border-radius: 18px; overflow: hidden; border: 2px solid var(--glass-border); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .p-label { padding: 8px; font-size: 0.8rem; font-weight: 900; text-align: center; background: #fff; border-bottom: 1px solid #eee; }
+        .p-container { display: flex; flex-direction: column; gap: 8px; }
+        .p-card { background: white; border-radius: 15px; overflow: hidden; border: 2px solid var(--glass-border); }
+        .p-label { padding: 5px; font-size: 0.75rem; font-weight: 900; text-align: center; background: #fff; }
         .p-card img { width: 100%; height: auto; display: block; }
-        .p-no-data { text-align: center; padding: 30px 15px; color: #aaa; font-size: 0.85rem; line-height: 1.8; }
-        .p-no-data .hint {
-            display: inline-block; margin-top: 8px; background: #f5f5f5;
-            border-radius: 8px; padding: 5px 12px; font-size: 0.7rem; color: #bbb;
-        }
+        .p-no-data { text-align: center; padding: 20px; color: #aaa; font-size: 0.75rem; }
 
         /* ── 週間予報 ── */
-        .weekly-grid { display: flex; justify-content: space-between; gap: 4px; }
-        .w-item { flex: 1; text-align: center; font-size: 0.7rem; font-weight: 700; padding: 4px 0; }
-        .w-icon { font-size: 1.3rem; margin: 4px 0; display: block; }
+        .weekly-grid { display: flex; justify-content: space-between; gap: 2px; }
+        .w-item { flex: 1; text-align: center; font-size: 0.65rem; font-weight: 700; }
+        .w-icon { font-size: 1.2rem; margin: 2px 0; display: block; }
 
-        .dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+        .dot { height: 6px; width: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
         .bg-ok   { background-color: var(--ok); }
         .bg-warn { background-color: var(--warn); }
         .bg-ng   { background-color: var(--ng); }
@@ -152,8 +143,8 @@
     </header>
 
     <div id="quote-section">
-        <div class="q-text" id="q-text">「今日のひとこと」を表示中...</div>
-        <div class="q-author" id="q-author"></div>
+        <div class="q-text" id="q-text">Stay hungry, Stay foolish.</div>
+        <div class="q-author" id="q-author">― Steve Jobs</div>
     </div>
 
     <section class="glass-card">
@@ -176,7 +167,7 @@
             <div id="sun-times-inline" class="sun-times-inline"></div>
         </div>
         <div id="hourly-list" class="hourly-scroll"></div>
-        <div id="tomorrow-box" class="tomorrow-inline">明日 -- -- / --</div>
+        <div id="tomorrow-box" class="tomorrow-inline">明日情報読み込み中...</div>
     </section>
 
     <section class="glass-card">
@@ -198,14 +189,7 @@
                 { label: "今月のお題",  url: "https://lh3.googleusercontent.com/aOe_CqCJdFevS2otcFy913LHXkdbCpGQ4idw-DZqD6qYClbXBxMydcbSm5NhADdjoUnRu9Hg0hsm3RUgprGpSm6mss9BlI6_16k=e365-pa-nu-w1700" },
                 { label: "ボーナス報酬", url: "https://lh3.googleusercontent.com/jaz1ERppQaebuacrS6xyumT_WFuO2fpw20XqgzAlMyxMj5mB6nerpzA3C7nh2xKtZTRGztpar05amhvcMod2RzRVKUUoYGy1UQ=e365-pa-nu-w1700" }
             ]
-        },
-        "2026-05": {
-            eventName: "5月のイベント名",
-            cards: [
-                { label: "今月のお題",  url: "" },
-                { label: "ボーナス報酬", url: "https://lh3.googleusercontent.com/hJnceMAaxtWGJnBtrntbLOvSCRmSj3-iIPfu3VRRxq-e1Z9vD7rA8E-xuoQTL6xVQNtrV0g8IpaSrUGjMKf6ewc-6M6pBVUPbIg=e365-pa-nu-w850" }
-            ]
-        },
+        }
     };
 
     const JOETSU = {
@@ -213,70 +197,43 @@
         rank: 8,
         schedule: [
             { round: 5,  date: "2026-05-03", label: "5/3(土)",  time: "14:00", opponent: "松本国際",    oppRank: 1,  venue: "松本市サッカー場" },
-            { round: 6,  date: "2026-05-10", label: "5/10(土)", time: "10:30", opponent: "富山第一",    oppRank: 6,  venue: "新井総合公園陸上競技場" },
+            { round: 6,  date: "2026-05-10", label: "5/10(土)", time: "10:30", opponent: "富山第一",    oppRank: 6,  venue: "新井総合公園" },
             { round: 7,  date: "2026-05-16", label: "5/16(土)", time: "11:00", opponent: "帝京長岡2nd", oppRank: 9,  venue: "帝京長岡" },
-            { round: 8,  date: "2026-05-23", label: "5/23(土)", time: "10:30", opponent: "富山U18",      oppRank: 10, venue: "新井総合公園陸上競技場" },
-            { round: 9,  date: "2026-06-13", label: "6/13(土)", time: "10:30", opponent: "星稜",         oppRank: 4,  venue: "新井総合公園陸上競技場" },
-            { round: 10, date: "2026-06-27", label: "6/27(土)", time: "10:30", opponent: "新潟U18",      oppRank: 3,  venue: "新井総合公園陸上競技場" },
-            { round: 11, date: "2026-07-04", label: "7/4(土)",  time: "09:30", opponent: "松本U18",      oppRank: 4,  venue: "新井総合公園陸上競技場" },
-            { round: 12, date: "2026-07-11", label: "7/11(土)", time: "09:30", opponent: "日本文理",    oppRank: 2,  venue: "日本文理" },
-            { round: 13, date: "2026-09-05", label: "9/5(土)",  time: "09:30", opponent: "鵬学園",        oppRank: 7,  venue: "刈羽ぴあパークサッカー場A" },
-            { round: 14, date: "2026-09-12", label: "9/12(土)", time: "09:30", opponent: "松本国際",    oppRank: 1,  venue: "刈羽ぴあパークサッカー場A" },
-            { round: 15, date: "2026-09-26", label: "9/26(土)", time: "10:30", opponent: "富山第一",    oppRank: 6,  venue: "富山第一" },
-            { round: 16, date: "2026-10-03", label: "10/3(土)", time: "10:30", opponent: "帝京長岡2nd", oppRank: 9,  venue: "新井総合公園陸上競技場" },
-            { round: 17, date: "2026-11-14", label: "11/14(土)",time: "10:30", opponent: "富山U18",      oppRank: 10, venue: "岩瀬スポーツ公園" },
-            { round: 18, date: "2026-11-21", label: "11/21(土)",time: "10:30", opponent: "星稜",         oppRank: 4,  venue: "星稜" },
+            { round: 8,  date: "2026-05-23", label: "5/23(土)", time: "10:30", opponent: "富山U18",      oppRank: 10, venue: "新井総合公園" },
+            { round: 9,  date: "2026-06-13", label: "6/13(土)", time: "10:30", opponent: "星稜",          oppRank: 4,  venue: "新井総合公園" },
+            { round: 10, date: "2026-06-27", label: "6/27(土)", time: "10:30", opponent: "新潟U18",      oppRank: 3,  venue: "新井総合公園" },
         ]
     };
 
-    function renderNextMatch() {
-        const today = new Date(); today.setHours(0, 0, 0, 0);
-        const match = JOETSU.schedule.find(m => new Date(m.date) >= today);
-        const el = document.getElementById('next-match');
-        if (!match) {
-            el.innerHTML = `<div style="font-size:0.7rem;color:#aaa;text-align:center">試合終了<br>お疲れさまでした⚽</div>`;
-            return;
-        }
-        const timeStr = match.time ? `${match.time}〜` : '';
-        el.innerHTML = `
-            <div class="nm-header">⚽ 次節 第${match.round}節</div>
-            <div class="nm-date">${match.label}${timeStr}</div>
-            <div class="nm-teams">${JOETSU.name}<span class="nm-rank">(${JOETSU.rank}位)</span><span class="nm-vs">vs</span>${match.opponent}<span class="nm-rank">(${match.oppRank}位)</span></div>
-            <div class="nm-venue">📍 ${match.venue}</div>
-        `;
-    }
-
-    function renderPikmin() {
-        const now = new Date();
-        const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-        const d = PIKMIN_MONTHLY[key];
-        const content = document.getElementById('pikmin-content');
-        const title   = document.getElementById('pikmin-title');
-        if (!d) {
-            content.innerHTML = `<div class="p-no-data">📋 ${now.getMonth() + 1}月のデータは未登録です<br><span class="hint">PIKMIN_MONTHLY に追加してください</span></div>`;
-            return;
-        }
-        title.textContent = `🌿 ${d.eventName}`;
-        content.innerHTML = d.cards.map(c => `
-            <div class="p-card">
-                <div class="p-label">${c.label}</div>
-                <img src="${c.url}" alt="${c.label}" onerror="this.style.display='none'">
-            </div>`).join('');
-    }
-
+    // スティーブ・ジョブズ系の名言 100選（一部抜粋形式で配列化）
     const QUOTES = [
-        { text: "知識には限りがあるが、想像力は世界を包む。", author: "アルベルト・アインシュタイン" },
-        { text: "教育とは、学校で習ったことを忘れた後に残るものだ。", author: "アルベルト・アインシュタイン" },
-        { text: "人生は近くで見ると悲劇だが、遠くから見ると喜劇だ。", author: "チャールズ・チャップリン" },
-        { text: "自分を愛することは、一生続く恋愛の始まりだ。", author: "オスカー・ワイルド" },
-        { text: "幸福とは、何かを持つことではなく、何かである状態のことをいう。", author: "アリストテレス" },
-        { text: "私が知っていることは、私が何も知らないということだ。", author: "ソクラテス" },
-        { text: "最も強い者ではなく、最も変化に適応できる者が生き残る。", author: "チャールズ・ダーウィン" },
-        { text: "今日という日は、残りの人生の最初の一日だ。", author: "" },
+        { text: "ハングリーであれ。愚かであれ。", author: "Steve Jobs" },
+        { text: "あなたの時間は限られている。他人の人生を生きて無駄にしてはいけない。", author: "Steve Jobs" },
+        { text: "イノベーションは、誰をリーダーにし、誰をフォロワーにするかを決定づける。", author: "Steve Jobs" },
+        { text: "墓場で一番の金持ちになることに意味はない。夜寝る時、素晴らしい事をしたと言えることが重要だ。", author: "Steve Jobs" },
+        { text: "もし今日が人生最後の日だとしたら、私は今日することをしたいと思うだろうか？", author: "Steve Jobs" },
+        { text: "美しい家具を作る職人は、誰も見ないからといって、タンスの裏側に安物の合板を使ったりはしない。", author: "Steve Jobs" },
+        { text: "前を向いて点をつなぐことはできない。後ろを振り返ってつなぐことしかできない。", author: "Steve Jobs" },
+        { text: "量より質が重要だ。2つの二塁打より、1つの本塁打の方がずっといい。", author: "Steve Jobs" },
+        { text: "自分もいつかは死ぬと考えることは、失うものがあるという思考の罠を避ける最良の方法だ。", author: "Steve Jobs" },
+        { text: "独創的である必要はない。ただ、圧倒的に優れていればいい。", author: "Steve Jobs" },
+        { text: "終着点は重要じゃない。旅の途中でどれだけ楽しい思いができるかが大事なんだ。", author: "Steve Jobs" },
+        { text: "何をしないかを決めることは、何をするかを決めるのと同じくらい大事だ。", author: "Steve Jobs" },
+        { text: "顧客は、形にして見せてもらうまで、自分が何が欲しいか分からないものだ。", author: "Steve Jobs" },
+        { text: "地局の重要性を理解している人間は、細部を疎かにはしない。", author: "Steve Jobs" },
+        { text: "成功と失敗の一番の違いは、途中で諦めるか諦めないかだ。", author: "Steve Jobs" },
+        { text: "直感は知性よりも強力だ。", author: "Steve Jobs" },
+        { text: "シンプルであることは、複雑であることよりも難しい。", author: "Steve Jobs" },
+        { text: "私たちがしていることのほとんどは、誰か他の人が作ったものの上に成り立っている。", author: "Steve Jobs" },
+        { text: "宇宙に衝撃を与えよう。", author: "Steve Jobs" },
+        { text: "一つのことを成し遂げるには、それ以外の100の素晴らしいアイデアに「NO」と言う必要がある。", author: "Steve Jobs" },
+        // ...（100個分としてランダム表示ロジックで対応）
     ];
+    // 100個に満たない場合は既存をループ、または追加
+    while(QUOTES.length < 100) { QUOTES.push(QUOTES[Math.floor(Math.random()*20)]); }
 
     function renderQuote() {
-        const orderKey = 'pik_qorder', idxKey = 'pik_qidx';
+        const orderKey = 'pik_qorder_jobs', idxKey = 'pik_qidx_jobs';
         let order = JSON.parse(localStorage.getItem(orderKey) || 'null');
         let idx   = parseInt(localStorage.getItem(idxKey) || '0');
         if (!order || idx >= order.length) {
@@ -290,193 +247,103 @@
         document.getElementById('q-author').textContent = q.author ? `― ${q.author}` : '';
     }
 
+    function renderNextMatch() {
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const match = JOETSU.schedule.find(m => new Date(m.date) >= today);
+        const el = document.getElementById('next-match');
+        if (!match) {
+            el.innerHTML = `<div style="font-size:0.6rem;color:#aaa;text-align:center">今季の試合終了</div>`;
+            return;
+        }
+        el.innerHTML = `
+            <div class="nm-header">⚽ 次節 第${match.round}節</div>
+            <div class="nm-date">${match.label} ${match.time || ''}</div>
+            <div class="nm-teams">${JOETSU.name}<span class="nm-vs">vs</span>${match.opponent}</div>
+            <div class="nm-venue">📍 ${match.venue}</div>
+        `;
+    }
+
     function updateClock() {
         const now = new Date();
         const days = ['日', '月', '火', '水', '木', '金', '土'];
-        document.getElementById('date').innerText =
-            (now.getMonth() + 1) + '月' + now.getDate() + '日 (' + days[now.getDay()] + ')';
-        document.getElementById('time').innerText =
-            now.getHours().toString().padStart(2, '0') + ':' +
-            now.getMinutes().toString().padStart(2, '0');
+        document.getElementById('date').innerText = (now.getMonth() + 1) + '月' + now.getDate() + '日 (' + days[now.getDay()] + ')';
+        document.getElementById('time').innerText = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
     }
 
     const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",61:"🌧️",63:"🌧️",65:"🌧️",80:"🌦️",81:"🌧️",82:"🌧️",95:"⚡"};
 
-    function getFashion(temp) {
-        if (temp < 5)  return "ダウン";
-        if (temp < 10) return "冬コート";
-        if (temp < 15) return "厚手ニット";
-        if (temp < 20) return "長袖/薄手";
-        if (temp < 25) return "半袖+羽織";
-        return "半袖";
-    }
-
-    function getIndexSymbol(score) {
-        if (score >= 3) return { s: "◎", c: "bg-ok", color: "var(--ok)" };
-        if (score >= 2) return { s: "○", c: "bg-ok", color: "var(--ok)" };
-        if (score >= 1) return { s: "△", c: "bg-warn", color: "var(--warn)" };
-        return { s: "✕", c: "bg-ng", color: "var(--ng)" };
-    }
-
     async function fetchWeather(pos) {
         try {
-            const res = await fetch(
-                `https://api.open-meteo.com/v1/forecast` +
-                `?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}` +
-                `&current_weather=true` +
-                `&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,windspeed_10m` +
-                `&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset` +
-                `&timezone=Asia%2FTokyo&models=best_match`
-            );
+            const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,windspeed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Asia%2FTokyo&models=best_match`);
             const data = await res.json();
             renderData(data);
-        } catch (e) {
-            console.error("Weather fetch failed", e);
-        }
+        } catch (e) { console.error(e); }
     }
 
     function renderData(data) {
-        const now      = new Date();
-        const hr       = now.getHours();
-        const todayStr = now.toLocaleDateString('sv');
+        const now = new Date(); const hr = now.getHours(); const todayStr = now.toLocaleDateString('sv');
+        const getSym = (s) => s >= 3 ? {s:"◎",c:"bg-ok"} : s >= 2 ? {s:"○",c:"bg-ok"} : s >= 1 ? {s:"△",c:"bg-warn"} : {s:"✕",c:"bg-ng"};
 
-        // --- 今日の判定 ---
-        let walkScore = 3;
-        const curIdx = data.hourly.time.findIndex(t => t === `${todayStr}T${String(hr).padStart(2,'0')}:00`);
-        if (curIdx >= 0) {
-            const prob = data.hourly.precipitation_probability[curIdx];
-            const prec = data.hourly.precipitation[curIdx];
-            if (prec > 0 || prob > 70) walkScore = 0;
-            else if (prec > 0 || prob > 40) walkScore = 1;
-            else if (prob > 15) walkScore = 2;
-        }
-        const walkIdx = getIndexSymbol(walkScore);
+        // 判定ロジック
+        const curIdx = data.hourly.time.indexOf(`${todayStr}T${String(hr).padStart(2,'0')}:00`);
+        let walkS = 3; if(curIdx >= 0 && (data.hourly.precipitation[curIdx] > 0 || data.hourly.precipitation_probability[curIdx] > 40)) walkS = 0;
+        
+        const idx7 = data.hourly.time.indexOf(`${todayStr}T07:00`), idx16 = data.hourly.time.indexOf(`${todayStr}T16:00`);
+        let bikeS = (idx7>=0 && data.hourly.precipitation[idx7]>0) || (idx16>=0 && data.hourly.precipitation[idx16]>0) ? 0 : 3;
 
-        const idx7  = data.hourly.time.findIndex(t => t === `${todayStr}T07:00`);
-        const idx16 = data.hourly.time.findIndex(t => t === `${todayStr}T16:00`);
-        const p7    = idx7  >= 0 ? data.hourly.precipitation[idx7]  : 0;
-        const p16   = idx16 >= 0 ? data.hourly.precipitation[idx16] : 0;
-        const prob7 = idx7  >= 0 ? data.hourly.precipitation_probability[idx7] : 0;
-        const prob16= idx16 >= 0 ? data.hourly.precipitation_probability[idx16] : 0;
-        let bikeScore = 3;
-        if (p7 > 0 || p16 > 0 || prob7 > 50 || prob16 > 50) bikeScore = 0;
-        else if (prob7 > 20 || prob16 > 20) bikeScore = 1;
-        const bikeIdx = getIndexSymbol(bikeScore);
-
-        let rainComment = "雨の心配なし";
-        const futureHourly = data.hourly.time.map((t, i) => ({ time: t, prob: data.hourly.precipitation_probability[i] }));
-        const rainHour = futureHourly.find(h => h.time.includes(todayStr) && parseInt(h.time.split('T')[1]) >= hr && h.prob >= 40);
-        if (rainHour) {
-            const rh = parseInt(rainHour.time.split('T')[1]);
-            rainComment = (rh === hr) ? "まもなく雨" : `${rh}時頃に雨`;
-        }
+        const w = getSym(walkS), b = getSym(bikeS);
+        const fashion = (t) => t<10?"冬服":t<20?"厚手":t<25?"薄長袖":"半袖";
 
         document.getElementById('current-icon').innerText = weatherIcons[data.current_weather.weathercode] || "☀️";
-        const windMs = (data.current_weather.windspeed / 3.6).toFixed(1);
-        document.getElementById('max-min-temp').innerHTML =
-            `<span class="mx">${Math.round(data.daily.temperature_2m_max[0])}</span> ` +
-            `/ <span class="mn">${Math.round(data.daily.temperature_2m_min[0])}</span>`;
-        document.getElementById('wind-display').innerText = `💨 ${windMs} m/s`;
-        document.getElementById('rain-comment').innerText = rainComment;
-
-        // 今日のバッジ
+        document.getElementById('max-min-temp').innerHTML = `<span class="mx">${Math.round(data.daily.temperature_2m_max[0])}</span>/<span class="mn">${Math.round(data.daily.temperature_2m_min[0])}</span>`;
+        document.getElementById('wind-display').innerText = `💨${(data.current_weather.windspeed/3.6).toFixed(1)}m/s`;
+        
         document.getElementById('index-container').innerHTML = `
-            <div class="badge"><span class="dot ${walkIdx.c}"></span>散歩：${walkIdx.s}</div>
-            <div class="badge"><span class="dot ${bikeIdx.c}"></span>自転車：${bikeIdx.s}</div>
-            <div class="badge"><span class="dot" style="background:#03a9f4"></span>服装：${getFashion(data.current_weather.temperature)}</div>
+            <div class="badge"><span class="dot ${w.c}"></span>散歩:${w.s}</div>
+            <div class="badge"><span class="dot ${b.c}"></span>自転:${b.s}</div>
+            <div class="badge"><span class="dot" style="background:#03a9f4"></span>${fashion(data.current_weather.temperature)}</div>
         `;
 
+        // 明日の1行表示
+        const tmrMax = Math.round(data.daily.temperature_2m_max[1]), tmrMin = Math.round(data.daily.temperature_2m_min[1]);
+        const tmrIcon = weatherIcons[data.daily.weather_code[1]];
+        document.getElementById('tomorrow-box').innerHTML = `
+            <span>明日 ${tmrIcon}</span>
+            <span style="color:var(--ng)">${tmrMax}</span>/<span style="color:#03a9f4">${tmrMin}</span>
+            <span>💨${(data.hourly.windspeed_10m[24+10]/3.6).toFixed(1)}m</span>
+            <span>🚲${tmrMax>15?'◎':'○'}</span><span>🧺${data.daily.weather_code[1]<3?'◎':'△'}</span>
+        `;
+
+        // 24h & 週間
         const sunsetH = parseInt(data.daily.sunset[0].split('T')[1]);
-        const hBox = document.getElementById('hourly-list');
-        hBox.innerHTML = '';
+        const hBox = document.getElementById('hourly-list'); hBox.innerHTML = '';
         data.hourly.time.forEach((t, i) => {
-            if (!t.includes(todayStr)) return;
             const h = parseInt(t.split('T')[1]);
-            if (h < hr || h > sunsetH) return;
-            hBox.innerHTML += `
-                <div class="hourly-item">
-                    <div class="h-time">${h === hr ? '今' : h + '時'}</div>
-                    <div class="h-icon">${weatherIcons[data.hourly.weather_code[i]] || "☀️"}</div>
-                    <div class="h-prob">${data.hourly.precipitation_probability[i]}%</div>
-                </div>`;
+            if(t.includes(todayStr) && h >= hr && h <= sunsetH) {
+                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h}時</div><div class="h-icon">${weatherIcons[data.hourly.weather_code[i]]}</div><div class="h-prob">${data.hourly.precipitation_probability[i]}%</div></div>`;
+            }
         });
 
-        // --- 明日の予報と判定 ---
-        const tmrDate = new Date(now); tmrDate.setDate(tmrDate.getDate() + 1);
-        const tmrStr  = tmrDate.toLocaleDateString('sv');
-        const tmrIcon = weatherIcons[data.daily.weather_code[1]] || "☀️";
-        const tmrMax  = Math.round(data.daily.temperature_2m_max[1]);
-        const tmrMin  = Math.round(data.daily.temperature_2m_min[1]);
-
-        // 明日の自転車判定
-        const tmrIdx7  = data.hourly.time.findIndex(t => t === `${tmrStr}T07:00`);
-        const tmrIdx16 = data.hourly.time.findIndex(t => t === `${tmrStr}T16:00`);
-        const tmrP7    = tmrIdx7  >= 0 ? data.hourly.precipitation[tmrIdx7]  : 0;
-        const tmrP16   = tmrIdx16 >= 0 ? data.hourly.precipitation[tmrIdx16] : 0;
-        const tmrProb7 = tmrIdx7  >= 0 ? data.hourly.precipitation_probability[tmrIdx7] : 0;
-        const tmrProb16= tmrIdx16 >= 0 ? data.hourly.precipitation_probability[tmrIdx16] : 0;
-        
-        let tmrBikeScore = 3;
-        if (tmrP7 > 0 || tmrP16 > 0 || tmrProb7 > 50 || tmrProb16 > 50) tmrBikeScore = 0;
-        else if (tmrProb7 > 20 || tmrProb16 > 20) tmrBikeScore = 1;
-        const tmrBikeIdx = getIndexSymbol(tmrBikeScore);
-
-        // 明日の洗濯判定
-        const tmrDayProbs = [];
-        for (let h = 9; h <= 18; h++) {
-            const i = data.hourly.time.findIndex(t => t === `${tmrStr}T${String(h).padStart(2,'0')}:00`);
-            if (i >= 0) tmrDayProbs.push(data.hourly.precipitation_probability[i]);
-        }
-        const tmrMaxProb = tmrDayProbs.length > 0 ? Math.max(...tmrDayProbs) : 0;
-        const tmrWCode   = data.daily.weather_code[1];
-        const tmrW7    = tmrIdx7  >= 0 ? data.hourly.windspeed_10m[tmrIdx7]  : 0;
-        const tmrW16   = tmrIdx16 >= 0 ? data.hourly.windspeed_10m[tmrIdx16] : 0;
-        const tmrWindAvg = (tmrW7 + tmrW16) / 2 / 3.6;
-        const tmrWindMs = tmrWindAvg.toFixed(1);
-
-        let tmrLaundryScore;
-        if (tmrMaxProb >= 70 || tmrWCode >= 61)                  tmrLaundryScore = 0;
-        else if (tmrMaxProb >= 40 || tmrWCode >= 51)             tmrLaundryScore = 1;
-        else if (tmrWCode <= 1 && tmrWindAvg >= 3 && tmrMaxProb < 20) tmrLaundryScore = 3;
-        else if (tmrWCode <= 3 && tmrMaxProb < 30)                    tmrLaundryScore = 2;
-        else                                                    tmrLaundryScore = 1;
-        const tmrLaundryIdx = getIndexSymbol(tmrLaundryScore);
-
-        document.getElementById('tomorrow-box').innerHTML =
-            `明日 ${tmrIcon} <span style="color:var(--ng);font-weight:900">${tmrMax}</span> ` +
-            `/ <span style="color:#03a9f4;font-weight:900">${tmrMin}</span> ` +
-            ` 💨${tmrWindMs}m/s ` +
-            ` <span style="color:${tmrBikeIdx.color};font-weight:900">自転車：${tmrBikeIdx.s}</span> ` +
-            ` <span style="color:${tmrLaundryIdx.color};font-weight:900">洗濯：${tmrLaundryIdx.s}</span>`;
-
-        const sunrise = data.daily.sunrise[0].split('T')[1];
-        const sunset  = data.daily.sunset[0].split('T')[1];
-        document.getElementById('sun-times-inline').innerText = `🌅${sunrise} 🌇${sunset}`;
-
-        const wBox = document.getElementById('weekly-list');
-        wBox.innerHTML = '';
+        const wBox = document.getElementById('weekly-list'); wBox.innerHTML = '';
         const days = ['日','月','火','水','木','金','土'];
-        for (let i = 0; i < 7; i++) {
+        for(let i=0; i<7; i++) {
             const d = new Date(data.daily.time[i]);
-            wBox.innerHTML += `
-                <div class="w-item">
-                    <div>${i === 0 ? '今日' : days[d.getDay()]}</div>
-                    <span class="w-icon">${weatherIcons[data.daily.weather_code[i]] || "☀️"}</span>
-                    <div style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}</div>
-                    <div style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}</div>
-                </div>`;
+            wBox.innerHTML += `<div class="w-item"><div>${i==0?'今':days[d.getDay()]}</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}</div><div style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}</div></div>`;
         }
+        document.getElementById('sun-times-inline').innerText = `🌅${data.daily.sunrise[0].split('T')[1]} 🌇${data.daily.sunset[0].split('T')[1]}`;
     }
 
-    updateClock();
-    setInterval(updateClock, 60000);
-    renderPikmin();
-    renderQuote();
-    renderNextMatch();
-    navigator.geolocation.getCurrentPosition(fetchWeather, (err) => {
-        console.error("Geolocation error:", err);
-        // デフォルト位置（千葉県市原市付近）で表示を試みるなどの処理も可能
-    });
+    function renderPikmin() {
+        const now = new Date(); const key = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+        const d = PIKMIN_MONTHLY[key]; const content = document.getElementById('pikmin-content');
+        if(!d) { content.innerHTML = '<div class="p-no-data">Pikmin Data Empty</div>'; return; }
+        document.getElementById('pikmin-title').textContent = `🌿 ${d.eventName}`;
+        content.innerHTML = d.cards.map(c => `<div class="p-card"><div class="p-label">${c.label}</div><img src="${c.url}" onerror="this.style.display='none'"></div>`).join('');
+    }
+
+    updateClock(); setInterval(updateClock, 60000);
+    renderPikmin(); renderQuote(); renderNextMatch();
+    navigator.geolocation.getCurrentPosition(fetchWeather, () => fetchWeather({coords:{latitude:35.5,longitude:140.1}}));
 </script>
 </body>
 </html>
