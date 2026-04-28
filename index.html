@@ -13,7 +13,7 @@
             --glass-border: rgba(255, 255, 255, 0.9);
             --text-main: #4e342e;
             --text-sub: #795548;
-            --ok: #28cd41; 
+            --ok: #28cd41;
             --warn: #ff9500;
             --ng: #ff3b30;
         }
@@ -78,6 +78,16 @@
         .p-label { padding: 6px; font-size: 0.7rem; font-weight: 900; text-align: center; background: #fff; border-bottom: 1px solid #eee; }
         .p-card img { width: 100%; height: auto; display: block; }
 
+        .p-no-data {
+            text-align: center; padding: 20px 10px;
+            color: #aaa; font-size: 0.78rem; line-height: 1.8;
+        }
+        .p-no-data .hint {
+            display: inline-block; margin-top: 6px;
+            background: #f5f5f5; border-radius: 8px;
+            padding: 4px 10px; font-size: 0.65rem; color: #bbb;
+        }
+
         .dot { height: 7px; width: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
         .bg-ok { background-color: var(--ok); }
         .bg-warn { background-color: var(--warn); }
@@ -108,17 +118,8 @@
     </section>
 
     <section class="glass-card">
-        <span class="section-title">🌿 ピクミンブルーム 最新情報</span>
-        <div class="p-container">
-            <div class="p-card">
-                <div class="p-label">今月のお題</div>
-                <img src="https://lh3.googleusercontent.com/aOe_CqCJdFevS2otcFy913LHXkdbCpGQ4idw-DZqD6qYClbXBxMydcbSm5NhADdjoUnRu9Hg0hsm3RUgprGpSm6mss9BlI6_16k=e365-pa-nu-w1700">
-            </div>
-            <div class="p-card">
-                <div class="p-label">ボーナス報酬</div>
-                <img src="https://lh3.googleusercontent.com/jaz1ERppQaebuacrS6xyumT_WFuO2fpw20XqgzAlMyxMj5mB6nerpzA3C7nh2xKtZTRGztpar05amhvcMod2RzRVKUUoYGy1UQ=e365-pa-nu-w1700">
-            </div>
-        </div>
+        <span class="section-title" id="pikmin-title">🌿 ピクミンブルーム 最新情報</span>
+        <div id="pikmin-content" class="p-container"></div>
     </section>
 
     <section class="glass-card">
@@ -128,6 +129,68 @@
 </div>
 
 <script>
+    // ══════════════════════════════════════════════════
+    //  ピクミンブルーム 月別データ設定
+    //  毎月1日頃に新しいエントリを追加するだけでOK
+    // ══════════════════════════════════════════════════
+    const PIKMIN_MONTHLY = {
+        "2026-04": {
+            eventName: "チューリップ・フェスティバル",
+            cards: [
+                {
+                    label: "今月のお題",
+                    url: "https://lh3.googleusercontent.com/aOe_CqCJdFevS2otcFy913LHXkdbCpGQ4idw-DZqD6qYClbXBxMydcbSm5NhADdjoUnRu9Hg0hsm3RUgprGpSm6mss9BlI6_16k=e365-pa-nu-w1700"
+                },
+                {
+                    label: "ボーナス報酬",
+                    url: "https://lh3.googleusercontent.com/jaz1ERppQaebuacrS6xyumT_WFuO2fpw20XqgzAlMyxMj5mB6nerpzA3C7nh2xKtZTRGztpar05amhvcMod2RzRVKUUoYGy1UQ=e365-pa-nu-w1700"
+                }
+            ]
+        },
+        "2026-05": {
+            eventName: "5月のイベント名",
+            cards: [
+                { label: "今月のお題",  url: "" },
+                { label: "ボーナス報酬", url: "https://lh3.googleusercontent.com/hJnceMAaxtWGJnBtrntbLOvSCRmSj3-iIPfu3VRRxq-e1Z9vD7rA8E-xuoQTL6xVQNtrV0g8IpaSrUGjMKf6ewc-6M6pBVUPbIg=e365-pa-nu-w850" }
+            ]
+        },
+        // ↓ 毎月ここにコピーして追加する
+        // "2026-06": {
+        //     eventName: "6月のイベント名",
+        //     cards: [
+        //         { label: "今月のお題",  url: "画像URLをここに貼る" },
+        //         { label: "ボーナス報酬", url: "画像URLをここに貼る" }
+        //     ]
+        // },
+    };
+
+    // ── ピクミンセクション描画 ──
+    function renderPikmin() {
+        const now = new Date();
+        const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        const d = PIKMIN_MONTHLY[key];
+        const content = document.getElementById('pikmin-content');
+        const title = document.getElementById('pikmin-title');
+
+        if (!d) {
+            const m = now.getMonth() + 1;
+            content.innerHTML = `
+                <div class="p-no-data">
+                    📋 ${m}月のデータは未登録です<br>
+                    <span class="hint">PIKMIN_MONTHLY に追加してください</span>
+                </div>`;
+            return;
+        }
+
+        title.textContent = `🌿 ${d.eventName}`;
+        content.innerHTML = d.cards.map(c => `
+            <div class="p-card">
+                <div class="p-label">${c.label}</div>
+                <img src="${c.url}" alt="${c.label}" onerror="this.style.display='none'">
+            </div>`).join('');
+    }
+
+    // ── 時計 ──
     function updateClock() {
         const now = new Date();
         const days = ['日', '月', '火', '水', '木', '金', '土'];
@@ -135,10 +198,11 @@
         document.getElementById('time').innerText = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
     }
 
-    const weatherIcons = {0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️", 45: "🌫️", 48: "🌫️", 51: "🌦️", 53: "🌦️", 55: "🌦️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 80: "🌦️", 81: "🌧️", 82: "🌧️", 95: "⚡"};
+    // ── 天気アイコン対応表 ──
+    const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",61:"🌧️",63:"🌧️",65:"🌧️",80:"🌦️",81:"🌧️",82:"🌧️",95:"⚡"};
 
     function getFashion(temp) {
-        if (temp < 5) return "服装:ダウン必須";
+        if (temp < 5)  return "服装:ダウン必須";
         if (temp < 10) return "服装:冬コート";
         if (temp < 15) return "服装:厚手ニット";
         if (temp < 20) return "服装:長袖/薄手羽織";
@@ -147,7 +211,7 @@
     }
 
     async function fetchWeather(pos) {
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true&hourly=temperature_2m,weathercode,precipitation_probability,precipitation&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Asia%2FTokyo&models=best_match`);
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true&hourly=temperature_2m,weather_code,precipitation_probability,precipitation&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Asia%2FTokyo&models=best_match`);
         const data = await res.json();
         renderData(data);
     }
@@ -159,13 +223,13 @@
         if (data.hourly.precipitation[hr] > 0) walk = { text: "散歩:NG 雨です", cls: "bg-ng" };
         else if (data.hourly.precipitation_probability[hr] > 50) walk = { text: "散歩:△ まもなく雨", cls: "bg-warn" };
 
-        const precip7 = data.hourly.precipitation[7] || 0;
+        const precip7  = data.hourly.precipitation[7]  || 0;
         const precip16 = data.hourly.precipitation[16] || 0;
         let bikeText = "自転車:通学OK";
-        let bikeCls = "bg-ok";
+        let bikeCls  = "bg-ok";
         if (precip7 > 0 || precip16 > 0) {
             bikeText = "自転車:通学NG";
-            bikeCls = "bg-ng";
+            bikeCls  = "bg-ng";
         }
 
         document.getElementById('current-temp').innerText = Math.round(data.current_weather.temperature) + '°';
@@ -179,10 +243,11 @@
         const hBox = document.getElementById('hourly-list');
         hBox.innerHTML = '';
         const sunsetH = parseInt(data.daily.sunset[0].split('T')[1]);
+        const todayStr = new Date().toLocaleDateString('sv');
         data.hourly.time.forEach((t, i) => {
             const h = parseInt(t.split('T')[1]);
-            if (t.includes(new Date().toLocaleDateString('sv')) && h >= hr && h <= sunsetH + 1) {
-                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h === hr ? '今' : h + '時'}</div><span class="h-icon">${weatherIcons[data.hourly.weathercode[i]]||"☀️"}</span><div class="h-temp">${Math.round(data.hourly.temperature_2m[i])}°</div><div class="h-prob">${data.hourly.precipitation_probability[i]}%</div></div>`;
+            if (t.includes(todayStr) && h >= hr && h <= sunsetH + 1) {
+                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h === hr ? '今' : h + '時'}</div><span class="h-icon">${weatherIcons[data.hourly.weather_code[i]]||"☀️"}</span><div class="h-temp">${Math.round(data.hourly.temperature_2m[i])}°</div><div class="h-prob">${data.hourly.precipitation_probability[i]}%</div></div>`;
             }
         });
         document.getElementById('sun-info').innerHTML = `<span>🌅 ${data.daily.sunrise[0].split('T')[1]}</span><span>🌇 ${data.daily.sunset[0].split('T')[1]}</span>`;
@@ -190,13 +255,15 @@
         const wBox = document.getElementById('weekly-list');
         wBox.innerHTML = '';
         const days = ['日','月','火','水','木','金','土'];
-        for (let i=0; i<7; i++) {
+        for (let i = 0; i < 7; i++) {
             const d = new Date(data.daily.time[i]);
-            wBox.innerHTML += `<div class="w-item"><div>${i===0?'今日':days[d.getDay()]}</div><span class="w-icon">${weatherIcons[data.daily.weathercode[i]]}</span><div style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}°</div><div style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}°</div></div>`;
+            wBox.innerHTML += `<div class="w-item"><div>${i===0?'今日':days[d.getDay()]}</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]||"☀️"}</span><div style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}°</div><div style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}°</div></div>`;
         }
     }
 
-    updateClock(); setInterval(updateClock, 60000);
+    updateClock();
+    setInterval(updateClock, 60000);
+    renderPikmin();
     navigator.geolocation.getCurrentPosition(fetchWeather);
 </script>
 </body>
