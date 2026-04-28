@@ -209,16 +209,16 @@
             { round: 6,  date: "2026-05-10", label: "5/10(土)", time: "10:30", opponent: "富山第一",    oppRank: 6,  venue: "新井総合公園陸上競技場" },
             { round: 7,  date: "2026-05-16", label: "5/16(土)", time: "11:00", opponent: "帝京長岡2nd", oppRank: 9,  venue: "帝京長岡" },
             { round: 8,  date: "2026-05-23", label: "5/23(土)", time: "10:30", opponent: "富山U18",      oppRank: 10, venue: "新井総合公園陸上競技場" },
-            { round: 9,  date: "2026-06-13", label: "6/13(土)", time: "10:30", opponent: "星稜",         oppRank: 4,  venue: "新井総合公園陸上競技場" },
+            { round: 9,  date: "2026-06-13", label: "6/13(土)", time: "10:30", opponent: "星稜",          oppRank: 4,  venue: "新井総合公園陸上競技場" },
             { round: 10, date: "2026-06-27", label: "6/27(土)", time: "10:30", opponent: "新潟U18",      oppRank: 3,  venue: "新井総合公園陸上競技場" },
             { round: 11, date: "2026-07-04", label: "7/4(土)",  time: "09:30", opponent: "松本U18",      oppRank: 4,  venue: "新井総合公園陸上競技場" },
             { round: 12, date: "2026-07-11", label: "7/11(土)", time: "09:30", opponent: "日本文理",    oppRank: 2,  venue: "日本文理" },
-            { round: 13, date: "2026-09-05", label: "9/5(土)",  time: "09:30", opponent: "鵬学園",       oppRank: 7,  venue: "刈羽ぴあパークサッカー場A" },
+            { round: 13, date: "2026-09-05", label: "9/5(土)",  time: "09:30", opponent: "鵬学園",        oppRank: 7,  venue: "刈羽ぴあパークサッカー場A" },
             { round: 14, date: "2026-09-12", label: "9/12(土)", time: "09:30", opponent: "松本国際",    oppRank: 1,  venue: "刈羽ぴあパークサッカー場A" },
             { round: 15, date: "2026-09-26", label: "9/26(土)", time: "10:30", opponent: "富山第一",    oppRank: 6,  venue: "富山第一" },
             { round: 16, date: "2026-10-03", label: "10/3(土)", time: "10:30", opponent: "帝京長岡2nd", oppRank: 9,  venue: "新井総合公園陸上競技場" },
             { round: 17, date: "2026-11-14", label: "11/14(土)",time: "10:30", opponent: "富山U18",      oppRank: 10, venue: "岩瀬スポーツ公園" },
-            { round: 18, date: "2026-11-21", label: "11/21(土)",time: "10:30", opponent: "星稜",         oppRank: 4,  venue: "星稜" },
+            { round: 18, date: "2026-11-21", label: "11/21(土)",time: "10:30", opponent: "星稜",          oppRank: 4,  venue: "星稜" },
         ]
     };
 
@@ -370,11 +370,11 @@
             `/ <span class="mn">${Math.round(data.daily.temperature_2m_min[0])}</span>`;
         document.getElementById('wind-display').innerText = `💨 ${windMs} m/s`;
 
-        // バッジ部分のテキスト形式アップデート
+        // バッジ部分
         document.getElementById('index-container').innerHTML = `
-            <div class="badge"><span class="dot ${walkCls}"></span>🐾 散歩：${walkSymbol}</div>
-            <div class="badge"><span class="dot ${bikeOK ? 'bg-ok' : 'bg-ng'}"></span>🚲 自転車：${bikeOK ? '○' : '✕'}</div>
-            <div class="badge"><span class="dot" style="background:#03a9f4"></span>👔 服装：${getFashion(data.current_weather.temperature)}</div>
+            <div class="badge"><span class="dot ${walkCls}"></span>散歩：${walkSymbol}</div>
+            <div class="badge"><span class="dot ${bikeOK ? 'bg-ok' : 'bg-ng'}"></span>自転車：${bikeOK ? '○' : '✕'}</div>
+            <div class="badge"><span class="dot" style="background:#03a9f4"></span>服装：${getFashion(data.current_weather.temperature)}</div>
         `;
 
         const sunsetH = parseInt(data.daily.sunset[0].split('T')[1]);
@@ -414,17 +414,18 @@
         const tmrWCode   = data.daily.weather_code[1];
         const tmrWindAvg = (tmrW7 + tmrW16) / 2 / 3.6;
         let laundry;
-        if (tmrMaxProb >= 70 || tmrWCode >= 61)                   laundry = { text: "洗濯NG", c: "var(--ng)" };
-        else if (tmrMaxProb >= 40 || tmrWCode >= 51)                  laundry = { text: "洗濯△",  c: "var(--warn)" };
-        else if (tmrWCode <= 1 && tmrWindAvg >= 3 && tmrMaxProb < 20) laundry = { text: "洗濯◎", c: "var(--ok)" };
-        else if (tmrWCode <= 3 && tmrMaxProb < 30)                    laundry = { text: "洗濯○", c: "var(--ok)" };
-        else                                                          laundry = { text: "洗濯△",  c: "var(--warn)" };
+        if (tmrMaxProb >= 70 || tmrWCode >= 61)             laundry = { text: "洗濯：NG", c: "var(--ng)" };
+        else if (tmrMaxProb >= 40 || tmrWCode >= 51)           laundry = { text: "洗濯：△",  c: "var(--warn)" };
+        else if (tmrWCode <= 1 && tmrWindAvg >= 3 && tmrMaxProb < 20) laundry = { text: "洗濯：◎", c: "var(--ok)" };
+        else if (tmrWCode <= 3 && tmrMaxProb < 30)                    laundry = { text: "洗濯：○", c: "var(--ok)" };
+        else                                                          laundry = { text: "洗濯：△",  c: "var(--warn)" };
 
+        // 明日の天気行
         document.getElementById('tomorrow-box').innerHTML =
             `明日 ${tmrIcon} <span style="color:var(--ng);font-weight:900">${tmrMax}</span> ` +
             `/ <span style="color:#03a9f4;font-weight:900">${tmrMin}</span> ` +
             ` 💨${tmrWindMs}m/s ` +
-            ` <span style="color:${tmrBikeOK ? 'var(--ok)' : 'var(--ng)'};font-weight:900">🚲${tmrBikeOK ? '○' : '✕'}</span> ` +
+            ` <span style="color:${tmrBikeOK ? 'var(--ok)' : 'var(--ng)'};font-weight:900">自転車：${tmrBikeOK ? '○' : '✕'}</span> ` +
             ` <span style="color:${laundry.c};font-weight:900">${laundry.text}</span>`;
 
         const sunrise = data.daily.sunrise[0].split('T')[1];
