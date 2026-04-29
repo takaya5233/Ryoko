@@ -60,14 +60,21 @@
         .hourly-section-header {
             display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
         }
+        .sun-times-container { display: flex; align-items: center; gap: 8px; }
+        .today-icon-small { font-size: 1.2rem; }
         .sun-times-inline { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); }
+        
         .hourly-scroll { display: flex; overflow-x: auto; gap: 14px; padding: 2px 0 8px; }
         .hourly-scroll::-webkit-scrollbar { display: none; }
-        .hourly-item { display: flex; flex-direction: column; align-items: center; min-width: 44px; gap: 2px; }
+        .hourly-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            min-width: 44px; gap: 4px; 
+            height: 90px; justify-content: space-between; /* 高さを統一し等間隔に配置 */
+        }
         .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
-        .h-icon { font-size: 1.4rem; }
+        .h-icon { font-size: 1.4rem; height: 1.6rem; display: flex; align-items: center; }
         .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; }
-        .h-walk, .h-wash { font-size: 0.75rem; font-weight: 900; margin-top: 1px; }
+        .h-walk, .h-wash { font-size: 0.75rem; font-weight: 900; }
 
         /* ── 明日の天気（1行） ── */
         .tomorrow-inline {
@@ -87,8 +94,10 @@
 
         /* ── 週間予報 ── */
         .weekly-grid { display: flex; justify-content: space-between; gap: 4px; }
-        .w-item { flex: 1; text-align: center; font-size: 0.7rem; font-weight: 700; }
-        .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; }
+        .w-item { flex: 1; text-align: center; font-size: 0.65rem; font-weight: 700; }
+        .w-date { font-size: 0.6rem; color: var(--text-sub); margin-bottom: 2px; }
+        .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; min-height: 1.5rem; }
+        .w-temp-max, .w-temp-min { height: 1.2rem; display: flex; align-items: center; justify-content: center; }
 
         /* ── サッカー次節ボックス ── */
         .match-box {
@@ -126,7 +135,10 @@
     <section class="glass-card">
         <div class="hourly-section-header">
             <span class="section-title">☁️ 日没までの空もよう</span>
-            <div id="sun-times-inline" class="sun-times-inline"></div>
+            <div class="sun-times-container">
+                <span id="today-icon" class="today-icon-small"></span>
+                <div id="sun-times-inline" class="sun-times-inline"></div>
+            </div>
         </div>
         <div id="hourly-list" class="hourly-scroll"></div>
         <div id="tomorrow-box" class="tomorrow-inline">明日情報読み込み中...</div>
@@ -200,7 +212,6 @@
         { text: "自分の価値を他人に決めさせてはいけない。", author: "Coco Chanel" },
         { text: "明日、死ぬかのように生きなさい。永遠に生きるかのように学びなさい。", author: "Mahatma Gandhi" }
     ];
-    while(QUOTES.length < 100) { QUOTES.push(QUOTES[Math.floor(Math.random()*QUOTES.length)]); }
 
     function renderQuote() {
         const orderKey = 'pik_qorder_biz', idxKey = 'pik_qidx_biz';
@@ -257,6 +268,9 @@
     function renderData(data) {
         const now = new Date(); const hr = now.getHours(); const todayStr = now.toLocaleDateString('sv');
 
+        // 今日の天気アイコン表示
+        document.getElementById('today-icon').innerText = weatherIcons[data.daily.weather_code[0]];
+
         const tmrMax = Math.round(data.daily.temperature_2m_max[1]), tmrMin = Math.round(data.daily.temperature_2m_min[1]);
         const tmrIcon = weatherIcons[data.daily.weather_code[1]];
         document.getElementById('tomorrow-box').innerHTML = `
@@ -273,7 +287,6 @@
             if(t.includes(todayStr) && h >= hr && h <= sunsetH) {
                 const prob = data.hourly.precipitation_probability[i];
                 const walkIcon = prob <= 20 ? '<span style="color:var(--ok)">🐾◎</span>' : prob <= 40 ? '<span style="color:var(--warn)">🐾△</span>' : '<span style="color:var(--ng)">🐾✕</span>';
-                // 洗濯判定の追加
                 const washIcon = prob <= 10 ? '<span style="color:var(--ok)">🧺◎</span>' : prob <= 30 ? '<span style="color:var(--ok)">🧺○</span>' : prob <= 50 ? '<span style="color:var(--warn)">🧺△</span>' : '<span style="color:var(--ng)">🧺✕</span>';
                 
                 hBox.innerHTML += `
@@ -291,7 +304,14 @@
         const days = ['日','月','火','水','木','金','土'];
         for(let i=0; i<7; i++) {
             const d = new Date(data.daily.time[i]);
-            wBox.innerHTML += `<div class="w-item"><div>${i==0?'今':days[d.getDay()]}</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}</div><div style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}</div></div>`;
+            const dateLabel = `${d.getDate()}(${i==0?'今':days[d.getDay()]})`;
+            wBox.innerHTML += `
+                <div class="w-item">
+                    <div class="w-date">${dateLabel}</div>
+                    <span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span>
+                    <div class="w-temp-max" style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}</div>
+                    <div class="w-temp-min" style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}</div>
+                </div>`;
         }
         document.getElementById('sun-times-inline').innerText = `🌅${data.daily.sunrise[0].split('T')[1]} 🌇${data.daily.sunset[0].split('T')[1]}`;
     }
