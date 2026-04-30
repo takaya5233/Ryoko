@@ -69,7 +69,7 @@
         .hourly-item { 
             display: flex; flex-direction: column; align-items: center; 
             min-width: 44px; gap: 4px; 
-            height: 90px; justify-content: space-between; /* 高さを統一し等間隔に配置 */
+            height: 90px; justify-content: space-between;
         }
         .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
         .h-icon { font-size: 1.4rem; height: 1.6rem; display: flex; align-items: center; }
@@ -83,7 +83,11 @@
             border-radius: 12px; font-size: 0.75rem; font-weight: 700;
             color: var(--text-sub); border: 1px solid rgba(0,0,0,0.03);
         }
-        .tmr-temp-box { letter-spacing: -1px; }
+        .tmr-temp-box { 
+            letter-spacing: -1px; 
+            display: inline-flex; 
+            align-items: center; 
+        }
 
         /* ── ピクミン ── */
         .p-container { display: flex; flex-direction: column; gap: 8px; }
@@ -97,7 +101,15 @@
         .w-item { flex: 1; text-align: center; font-size: 0.65rem; font-weight: 700; }
         .w-date { font-size: 0.6rem; color: var(--text-sub); margin-bottom: 2px; }
         .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; min-height: 1.5rem; }
-        .w-temp-max, .w-temp-min { height: 1.2rem; display: flex; align-items: center; justify-content: center; }
+        
+        /* 最高/最低気温の高さを統一 */
+        .w-temp {
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
 
         /* ── サッカー次節ボックス ── */
         .match-box {
@@ -108,9 +120,27 @@
         }
         .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .nm-date   { font-size: 0.9rem; font-weight: 900; color: var(--text-main); margin-top: 2px; }
-        .nm-teams  { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 4px 0; }
+        .nm-teams  { 
+            font-size: 0.85rem; font-weight: 700; color: var(--text-sub); 
+            display: flex; align-items: center; justify-content: center; 
+            gap: 4px; margin: 4px 0; 
+        }
         .nm-vs     { font-size: 0.65rem; color: #ccc; font-weight: 900; margin: 0 4px; }
-        .nm-rank   { font-size: 0.6rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; vertical-align: middle; }
+        
+        /* 順位をチーム名の高さに揃える */
+        .nm-rank   { 
+            font-size: 0.65rem; 
+            color: #a1887f; 
+            background: #f0f0f0; 
+            padding: 1px 5px; 
+            border-radius: 4px; 
+            margin-left: 3px; 
+            font-weight: 700; 
+            vertical-align: middle;
+            display: inline-block;
+            line-height: 1.1;
+        }
+        
         .nm-venue  { font-size: 0.7rem; color: #a1887f; font-weight: 700; margin-top: 2px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 4px; }
 
         .dot { height: 6px; width: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
@@ -275,9 +305,10 @@
         const tmrIcon = weatherIcons[data.daily.weather_code[1]];
         document.getElementById('tomorrow-box').innerHTML = `
             <span>明日 ${tmrIcon}</span>
-            <span class="tmr-temp-box"><span style="color:var(--ng)">${tmrMax}</span><span style="margin:0 -1px">/</span><span style="color:#03a9f4">${tmrMin}</span></span>
-            <span>💨${(data.hourly.windspeed_10m[24+10]/3.6).toFixed(1)}m</span>
-            <span>🚲${tmrMax>15?'◎':'○'}</span><span>🧺${data.daily.weather_code[1]<3?'◎':'△'}</span>
+            <span class="tmr-temp-box"><span style="color:var(--ng)">${tmrMax}</span><span style="margin:0 2px"> / </span><span style="color:#03a9f4">${tmrMin}</span></span>
+            <span style="vertical-align:middle">💨${(data.hourly.windspeed_10m[24+10]/3.6).toFixed(1)}m</span>
+            <span style="vertical-align:middle">🚲${tmrMax>15?'◎':'○'}</span>
+            <span style="vertical-align:middle">🧺${data.daily.weather_code[1]<3?'◎':'△'}</span>
         `;
 
         const sunsetH = parseInt(data.daily.sunset[0].split('T')[1]);
@@ -309,8 +340,8 @@
                 <div class="w-item">
                     <div class="w-date">${dateLabel}</div>
                     <span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span>
-                    <div class="w-temp-max" style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}</div>
-                    <div class="w-temp-min" style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}</div>
+                    <div class="w-temp" style="color:var(--ng)">${Math.round(data.daily.temperature_2m_max[i])}</div>
+                    <div class="w-temp" style="color:#03a9f4">${Math.round(data.daily.temperature_2m_min[i])}</div>
                 </div>`;
         }
         document.getElementById('sun-times-inline').innerText = `🌅${data.daily.sunrise[0].split('T')[1]} 🌇${data.daily.sunset[0].split('T')[1]}`;
