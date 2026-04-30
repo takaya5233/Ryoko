@@ -56,6 +56,16 @@
 
         .section-title { font-size: 0.8rem; font-weight: 900; color: var(--text-sub); margin-bottom: 10px; display: block; }
 
+        /* 現在地ステータス表示 */
+        #location-status {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #5c6bc0;
+            text-align: center;
+            margin: -4px 0 8px 0;
+            padding: 4px 0;
+        }
+
         /* ── 日没までの空もよう ── */
         .hourly-section-header {
             display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
@@ -102,7 +112,6 @@
         .w-date { font-size: 0.6rem; color: var(--text-sub); margin-bottom: 2px; }
         .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; min-height: 1.5rem; }
         
-        /* 最高/最低気温の高さを統一 */
         .w-temp {
             height: 1.25rem;
             display: flex;
@@ -127,7 +136,6 @@
         }
         .nm-vs     { font-size: 0.65rem; color: #ccc; font-weight: 900; margin: 0 4px; }
         
-        /* 順位をチーム名の高さに揃える */
         .nm-rank   { 
             font-size: 0.65rem; 
             color: #a1887f; 
@@ -142,11 +150,6 @@
         }
         
         .nm-venue  { font-size: 0.7rem; color: #a1887f; font-weight: 700; margin-top: 2px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 4px; }
-
-        .dot { height: 6px; width: 6px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-        .bg-ok   { background-color: var(--ok); }
-        .bg-warn { background-color: var(--warn); }
-        .bg-ng   { background-color: var(--ng); }
     </style>
 </head>
 <body>
@@ -170,6 +173,10 @@
                 <div id="sun-times-inline" class="sun-times-inline"></div>
             </div>
         </div>
+        
+        <!-- 現在地ステータス表示 -->
+        <div id="location-status">📍 現在地を取得中...</div>
+        
         <div id="hourly-list" class="hourly-scroll"></div>
         <div id="tomorrow-box" class="tomorrow-inline">明日情報読み込み中...</div>
     </section>
@@ -287,12 +294,21 @@
 
     const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",61:"🌧️",63:"🌧️",65:"🌧️",80:"🌦️",81:"🌧️",82:"🌧️",95:"⚡"};
 
+    function setLocationStatus(message, color = '#5c6bc0') {
+        const statusEl = document.getElementById('location-status');
+        statusEl.style.color = color;
+        statusEl.textContent = message;
+    }
+
     async function fetchWeather(pos) {
         try {
             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current_weather=true&hourly=temperature_2m,weather_code,precipitation_probability,precipitation,windspeed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Asia%2FTokyo&models=best_match`);
             const data = await res.json();
             renderData(data);
-        } catch (e) { console.error(e); }
+        } catch (e) {
+            console.error(e);
+            setLocationStatus("⚠️ 天気情報の取得に失敗しました", "#ff3b30");
+        }
     }
 
     function renderData(data) {
@@ -355,9 +371,37 @@
         content.innerHTML = d.cards.map(c => `<div class="p-card"><div class="p-label">${c.label}</div><img src="${c.url}" onerror="this.style.display='none'"></div>`).join('');
     }
 
-    updateClock(); setInterval(updateClock, 60000);
-    renderPikmin(); renderQuote(); renderNextMatch();
-    navigator.geolocation.getCurrentPosition(fetchWeather, () => fetchWeather({coords:{latitude:35.5,longitude:140.1}}));
+    // 現在地取得処理
+    function getWeatherWithLocation() {
+        if (navigator.geolocation) {
+            setLocationStatus("📍 現在地を取得中...");
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setLocationStatus("📍 現在地（朝霞市付近）", "#28cd41");
+                    fetchWeather(position);
+                },
+                (error) => {
+                    console.warn("位置情報取得エラー:", error);
+                    setLocationStatus("📍 フォールバック（千葉付近）", "#ff9500");
+                    // フォールバック（千葉付近）
+                    fetchWeather({coords: {latitude: 35.5, longitude: 140.1}});
+                }
+            );
+        } else {
+            setLocationStatus("📍 位置情報が利用できません", "#ff3b30");
+            fetchWeather({coords: {latitude: 35.5, longitude: 140.1}});
+        }
+    }
+
+    // 初期化
+    updateClock(); 
+    setInterval(updateClock, 60000);
+    renderPikmin(); 
+    renderQuote(); 
+    renderNextMatch();
+    
+    // 天気取得（現在地優先）
+    getWeatherWithLocation();
 </script>
 </body>
 </html>
