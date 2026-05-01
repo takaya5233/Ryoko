@@ -13,9 +13,6 @@
             --glass-border: rgba(255, 255, 255, 0.9);
             --text-main: #4e342e;
             --text-sub: #795548;
-            --ok: #28cd41;
-            --warn: #ff9500;
-            --ng: #ff3b30;
         }
 
         body {
@@ -66,32 +63,27 @@
         .hourly-item { 
             display: flex; flex-direction: column; align-items: center; 
             min-width: 46px; gap: 4px; 
-            height: auto; padding-bottom: 4px;
         }
         .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
         .h-icon { font-size: 1.4rem; height: 1.6rem; display: flex; align-items: center; margin: 2px 0; }
         .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; margin-bottom: 2px; }
-        .h-walk, .h-wash { font-size: 0.7rem; font-weight: 900; line-height: 1.2; }
 
-        .tomorrow-inline {
-            display: flex; align-items: center; justify-content: space-between;
+        .tomorrow-row {
             margin-top: 8px; padding: 8px 12px; background: rgba(255,255,255,0.85);
-            border-radius: 12px; font-size: 0.75rem; font-weight: 700;
-            color: var(--text-sub); border: 1px solid rgba(0,0,0,0.03);
+            border-radius: 12px; border: 1px solid rgba(0,0,0,0.03);
+            font-size: 0.75rem; font-weight: 900; color: var(--text-sub);
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .tmr-temp-box { letter-spacing: -1px; }
 
         .p-container { display: flex; flex-direction: column; gap: 8px; }
         .p-card { background: white; border-radius: 15px; overflow: hidden; border: 2px solid var(--glass-border); }
         .p-label { padding: 6px; font-size: 0.75rem; font-weight: 900; text-align: center; background: #fff; }
         .p-card img { width: 100%; height: auto; display: block; }
-        .p-no-data { text-align: center; padding: 20px; color: #aaa; font-size: 0.75rem; }
 
         .weekly-grid { display: flex; justify-content: space-between; gap: 4px; }
         .w-item { flex: 1; text-align: center; font-size: 0.65rem; font-weight: 700; }
         .w-date { font-size: 0.6rem; color: var(--text-sub); margin-bottom: 2px; }
         .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; min-height: 1.5rem; }
-        .w-temp-max, .w-temp-min { height: 1.2rem; display: flex; align-items: center; justify-content: center; }
 
         .match-box {
             background: rgba(255,255,255,0.9); border-radius: 15px;
@@ -102,8 +94,7 @@
         .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .nm-date   { font-size: 0.9rem; font-weight: 900; color: var(--text-main); margin-top: 2px; }
         .nm-teams  { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 4px 0; }
-        .nm-vs     { font-size: 0.65rem; color: #ccc; font-weight: 900; margin: 0 4px; }
-        .nm-rank   { font-size: 0.6rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; vertical-align: middle; }
+        .nm-rank   { font-size: 0.6rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; }
         .nm-venue  { font-size: 0.7rem; color: #a1887f; font-weight: 700; margin-top: 2px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 4px; }
     </style>
 </head>
@@ -129,7 +120,7 @@
             </div>
         </div>
         <div id="hourly-list" class="hourly-scroll"></div>
-        <div id="tomorrow-box" class="tomorrow-inline">明日情報読み込み中...</div>
+        <div id="tomorrow-box" class="tomorrow-row">明日情報読み込み中...</div>
     </section>
 
     <section class="glass-card">
@@ -184,7 +175,7 @@
         const match = JOETSU.schedule.find(m => new Date(m.date) >= today);
         const el = document.getElementById('next-match');
         if (!match) { el.innerHTML = `<div style="font-size:0.7rem;color:#aaa;text-align:center">今季の全試合が終了しました。</div>`; return; }
-        el.innerHTML = `<div class="nm-header">⚽ 第${match.round}節</div><div class="nm-date">${match.label} ${match.time} Kick Off</div><div class="nm-teams"><span>${match.home}<span class="nm-rank">${match.homeRank}位</span></span><span class="nm-vs">vs</span><span>${match.away}<span class="nm-rank">${match.awayRank}位</span></span></div><div class="nm-venue">📍 ${match.venue}</div>`;
+        el.innerHTML = `<div class="nm-header">⚽ 第${match.round}節</div><div class="nm-date">${match.label} ${match.time} Kick Off</div><div class="nm-teams"><span>${match.home}<span class="nm-rank">${match.homeRank}位</span></span><span style="color:#ccc;font-size:0.65rem;font-weight:900;margin:0 4px">vs</span><span>${match.away}<span class="nm-rank">${match.awayRank}位</span></span></div><div class="nm-venue">📍 ${match.venue}</div>`;
     }
 
     function updateClock() {
@@ -197,7 +188,7 @@
     const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",61:"🌧️",63:"🌧️",65:"🌧️",80:"🌦️",81:"🌧️",82:"🌧️",95:"⚡"};
 
     async function fetchWeather(pos) {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=weather_code&hourly=temperature_2m,weather_code,precipitation_probability,windspeed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Asia%2FTokyo`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=weather_code&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Asia%2FTokyo`;
         try {
             const res = await fetch(url);
             renderData(await res.json());
@@ -207,8 +198,17 @@
     function renderData(data) {
         const now = new Date(), hr = now.getHours(), todayStr = now.toLocaleDateString('sv');
         document.getElementById('today-icon').innerText = weatherIcons[data.daily.weather_code[0]];
+        
         const tmrMax = Math.round(data.daily.temperature_2m_max[1]), tmrMin = Math.round(data.daily.temperature_2m_min[1]);
-        document.getElementById('tomorrow-box').innerHTML = `<span>明日 ${weatherIcons[data.daily.weather_code[1]]}</span> <span style="color:red">${tmrMax}</span>/<span style="color:blue">${tmrMin}</span>℃`;
+        const isRainy = [51, 53, 55, 61, 63, 65, 80, 81, 82, 95].includes(data.daily.weather_code[1]);
+        const advice = isRainy ? "🧺部屋干し推奨" : "☀️外干しOK";
+
+        document.getElementById('tomorrow-box').innerHTML = `
+            <span>明日</span>
+            <span>${advice}</span>
+            <span style="color:#555">/</span>
+            <span style="color:red">${tmrMax}</span><span style="color:#555">/</span><span style="color:blue">${tmrMin}</span>℃
+        `;
 
         const hBox = document.getElementById('hourly-list'); hBox.innerHTML = '';
         data.hourly.time.forEach((t, i) => {
