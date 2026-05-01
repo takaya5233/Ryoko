@@ -49,14 +49,13 @@
             border-radius: 20px; padding: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
 
-        .section-title { font-size: 0.8rem; font-weight: 900; color: var(--text-sub); margin-bottom: 10px; display: block; }
+        .section-title { font-size: 0.8rem; font-weight: 900; color: var(--text-sub); margin: 0; display: flex; align-items: center; height: 1.5rem; }
 
         .hourly-section-header {
-            display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; height: 1.5rem;
         }
-        .sun-times-container { display: flex; align-items: center; gap: 8px; }
-        .today-icon-small { font-size: 1.2rem; }
-        .sun-times-inline { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); }
+        .sun-times-container { display: flex; align-items: center; gap: 8px; height: 100%; }
+        .sun-times-inline { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); line-height: 1.5rem; }
         
         .hourly-scroll { display: flex; overflow-x: auto; gap: 14px; padding: 2px 0 8px; }
         .hourly-scroll::-webkit-scrollbar { display: none; }
@@ -115,7 +114,6 @@
         <div class="hourly-section-header">
             <span class="section-title">☁️ 日没までの空もよう</span>
             <div class="sun-times-container">
-                <span id="today-icon" class="today-icon-small"></span>
                 <div id="sun-times-inline" class="sun-times-inline"></div>
             </div>
         </div>
@@ -197,8 +195,6 @@
 
     function renderData(data) {
         const now = new Date(), hr = now.getHours(), todayStr = now.toLocaleDateString('sv');
-        document.getElementById('today-icon').innerText = weatherIcons[data.daily.weather_code[0]];
-        
         const tmrMax = Math.round(data.daily.temperature_2m_max[1]), tmrMin = Math.round(data.daily.temperature_2m_min[1]);
         const isRainy = [51, 53, 55, 61, 63, 65, 80, 81, 82, 95].includes(data.daily.weather_code[1]);
         const advice = isRainy ? "🧺部屋干し推奨" : "☀️外干しOK";
