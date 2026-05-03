@@ -65,7 +65,9 @@
         }
         .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
         .h-icon { font-size: 1.4rem; height: 1.6rem; display: flex; align-items: center; margin: 2px 0; }
-        .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; margin-bottom: 2px; }
+        .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; margin-bottom: 0; }
+        .h-temp { font-size: 0.65rem; color: #f44336; font-weight: 900; line-height: 1; }
+        .h-wind { font-size: 0.6rem; color: #607d8b; font-weight: 900; line-height: 1; }
 
         .tomorrow-row {
             margin-top: 8px; padding: 8px 12px; background: rgba(255,255,255,0.85);
@@ -83,6 +85,7 @@
         .w-item { flex: 1; text-align: center; font-size: 0.65rem; font-weight: 700; }
         .w-date { font-size: 0.6rem; color: var(--text-sub); margin-bottom: 2px; }
         .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; min-height: 1.5rem; }
+        .w-wind { color: #607d8b; font-size: 0.58rem; font-weight: 900; margin-top: 2px; }
 
         .match-box {
             background: rgba(255,255,255,0.9); border-radius: 15px;
@@ -450,7 +453,7 @@
     const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",61:"🌧️",63:"🌧️",65:"🌧️",80:"🌦️",81:"🌧️",82:"🌧️",95:"⚡"};
 
     async function fetchWeather(pos) {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=weather_code&hourly=temperature_2m,weather_code,precipitation_probability&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Asia%2FTokyo`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=weather_code&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,sunrise,sunset&timezone=Asia%2FTokyo&wind_speed_unit=ms`;
         try {
             const res = await fetch(url);
             renderData(await res.json());
@@ -475,7 +478,9 @@
             const h = parseInt(t.split('T')[1]);
             if(t.includes(todayStr) && h >= hr) {
                 const prob = data.hourly.precipitation_probability[i];
-                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h}時</div><div class="h-icon">${weatherIcons[data.hourly.weather_code[i]]}</div><div class="h-prob">${prob}%</div></div>`;
+                const temp = Math.round(data.hourly.temperature_2m[i]);
+                const wind = Math.round(data.hourly.wind_speed_10m[i]);
+                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h}時</div><div class="h-icon">${weatherIcons[data.hourly.weather_code[i]]}</div><div class="h-prob">${prob}%</div><div class="h-temp">${temp}℃</div><div class="h-wind">🍃${wind}m/s</div></div>`;
             }
         });
 
@@ -483,7 +488,8 @@
         const days = ['日','月','火','水','木','金','土'];
         for(let i=0; i<7; i++) {
             const d = new Date(data.daily.time[i]);
-            wBox.innerHTML += `<div class="w-item"><div class="w-date">${d.getDate()}(${days[d.getDay()]})</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div style="color:red">${Math.round(data.daily.temperature_2m_max[i])}</div><div style="color:blue">${Math.round(data.daily.temperature_2m_min[i])}</div></div>`;
+            const wind = Math.round(data.daily.wind_speed_10m_max[i]);
+            wBox.innerHTML += `<div class="w-item"><div class="w-date">${d.getDate()}(${days[d.getDay()]})</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div style="color:red">${Math.round(data.daily.temperature_2m_max[i])}</div><div style="color:blue">${Math.round(data.daily.temperature_2m_min[i])}</div><div class="w-wind">🍃${wind}m/s</div></div>`;
         }
         document.getElementById('sun-times-inline').innerText = `🌅${data.daily.sunrise[0].split('T')[1]} 🌇${data.daily.sunset[0].split('T')[1]}`;
     }
