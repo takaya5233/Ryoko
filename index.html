@@ -92,8 +92,12 @@
         }
         .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .nm-date   { font-size: 0.9rem; font-weight: 900; color: var(--text-main); margin-top: 2px; }
-        .nm-teams  { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 4px 0; }
-        .nm-rank   { font-size: 0.6rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; }
+        .nm-teams  { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 4px 0; flex-wrap: wrap; }
+        .nm-rank   { font-size: 0.6rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; display: inline-flex; align-items: center; gap: 1px; min-width: 2.2em; justify-content: center; }
+        .nm-rank-live { color: #2575fc; background: #eef5ff; }
+        .nm-rank-cache { color: #8d6e63; background: #f5f1ee; }
+        .nm-rank-loading:after { content: '...'; animation: rankDots 1.5s infinite; }
+        @keyframes rankDots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } }
         .nm-venue  { font-size: 0.7rem; color: #a1887f; font-weight: 700; margin-top: 2px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 4px; }
     </style>
 </head>
@@ -173,7 +177,267 @@
         const match = JOETSU.schedule.find(m => new Date(m.date) >= today);
         const el = document.getElementById('next-match');
         if (!match) { el.innerHTML = `<div style="font-size:0.7rem;color:#aaa;text-align:center">今季の全試合が終了しました。</div>`; return; }
-        el.innerHTML = `<div class="nm-header">⚽ 第${match.round}節</div><div class="nm-date">${match.label} ${match.time} Kick Off</div><div class="nm-teams"><span>${match.home}<span class="nm-rank">${match.homeRank}位</span></span><span style="color:#ccc;font-size:0.65rem;font-weight:900;margin:0 4px">vs</span><span>${match.away}<span class="nm-rank">${match.awayRank}位</span></span></div><div class="nm-venue">📍 ${match.venue}</div>`;
+        el.innerHTML = `<div class="nm-header">⚽ 第${match.round}節</div><div class="nm-date">${match.label} ${match.time} Kick Off</div><div class="nm-teams"><span>${match.home}<span class="nm-rank nm-rank-loading" id="home-rank" data-team="${match.home}" data-fallback-rank="${match.homeRank}">取得中</span></span><span style="color:#ccc;font-size:0.65rem;font-weight:900;margin:0 4px">vs</span><span>${match.away}<span class="nm-rank nm-rank-loading" id="away-rank" data-team="${match.away}" data-fallback-rank="${match.awayRank}">取得中</span></span></div><div class="nm-venue">📍 ${match.venue}</div>`;
+        updateMatchRanks(match);
+    }
+
+    /**
+     * 【高速版】上越高校と対戦相手の順位取得ロジック
+     * - まず予定表に登録済みの順位を即表示
+     * - 前回取得済みの順位があればlocalStorageから即更新
+     * - 複数プロキシを同時に走らせ、最初に成功したものを採用
+     * - 2026など年度の数字を順位として拾わないよう、順位候補を1〜20位に限定
+     */
+    async function updateMatchRanks(match) {
+        const targetUrl = 'https://koko-soccer.com/score/4345';
+        const cacheKey = 'joetsu_soccer_standings_cache_v3';
+        const cacheMaxAge = 1000 * 60 * 60 * 6;
+
+        function normalizeTeamName(name) {
+            return String(name || '')
+                .replace(/\s+/g, '')
+                .replace(/高校/g, '')
+                .replace(/サッカー部/g, '')
+                .replace(/ＦＣ/g, 'FC')
+                .replace(/Ｕ/g, 'U')
+                .replace(/１８/g, '18')
+                .replace(/２ｎｄ/gi, '2nd')
+                .replace(/セカンド/g, '2nd');
+        }
+
+        function teamAliases(name) {
+            const normalized = normalizeTeamName(name);
+            const aliases = {
+                "上越": ["上越", "上越高", "上越高校"],
+                "松本国際": ["松本国際", "松本国際高", "松本国際高校"],
+                "富山第一": ["富山第一", "富山第一高", "富山第一高校"],
+                "帝京長岡2nd": ["帝京長岡2nd", "帝京長岡２nd", "帝京長岡2", "帝京長岡"],
+                "富山U18": ["富山U18", "カターレ富山U18", "富山Ｕ１８", "富山"],
+                "星稜": ["星稜", "星稜高", "星稜高校"],
+                "新潟U18": ["新潟U18", "アルビレックス新潟U18", "新潟Ｕ１８", "新潟"]
+            };
+            return aliases[normalized] || [normalized];
+        }
+
+        function renderRank(elId, rankNum, pointsStr, mode) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.classList.remove('nm-rank-loading', 'nm-rank-live', 'nm-rank-cache');
+            if (mode === 'live') el.classList.add('nm-rank-live');
+            if (mode === 'cache') el.classList.add('nm-rank-cache');
+            if (pointsStr && pointsStr !== '--') {
+                el.textContent = `${rankNum}位`;
+                el.title = `勝点 ${pointsStr}`;
+            } else {
+                el.textContent = `${rankNum}位`;
+                el.title = '';
+            }
+        }
+
+        function renderFallbackRanks() {
+            renderRank('home-rank', match.homeRank, '--', 'fallback');
+            renderRank('away-rank', match.awayRank, '--', 'fallback');
+        }
+
+        function renderRanksFromStandings(standings, mode) {
+            const home = findTeamStanding(standings, match.home);
+            const away = findTeamStanding(standings, match.away);
+
+            if (home) renderRank('home-rank', home.rankNum, home.pointsStr, mode);
+            if (away) renderRank('away-rank', away.rankNum, away.pointsStr, mode);
+        }
+
+        function saveCache(standings) {
+            localStorage.setItem(cacheKey, JSON.stringify({
+                standings,
+                savedAt: Date.now()
+            }));
+        }
+
+        function readCache() {
+            try {
+                const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+                if (!cached || !cached.standings || !cached.savedAt) return null;
+                if (Date.now() - cached.savedAt > cacheMaxAge) return cached;
+                return cached;
+            } catch(e) {
+                return null;
+            }
+        }
+
+        function timeoutPromise(ms) {
+            return new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('Timeout')), ms);
+            });
+        }
+
+        async function fetchWithTimeout(url, ms) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), ms);
+            try {
+                const res = await fetch(url, {
+                    signal: controller.signal,
+                    cache: 'no-store'
+                });
+                if (!res.ok) throw new Error('Fetch failed: ' + res.status);
+                return await res.text();
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+
+        function extractHtml(proxyName, text) {
+            if (proxyName === 'allorigins') {
+                const data = JSON.parse(text);
+                return data.contents || '';
+            }
+            return text;
+        }
+
+        function pickRankNumber(cells, rowText) {
+            const rankCandidates = [];
+
+            cells.forEach((cell, index) => {
+                const compact = String(cell || '').replace(/\s+/g, '');
+                const exactRank = compact.match(/^(\d{1,2})位?$/);
+                const withRankChar = compact.match(/(^|[^0-9])(\d{1,2})位($|[^0-9])/);
+
+                if (exactRank) {
+                    const n = Number(exactRank[1]);
+                    if (n >= 1 && n <= 20) rankCandidates.push({ value: String(n), score: index === 0 ? 1 : 2 });
+                }
+
+                if (withRankChar) {
+                    const n = Number(withRankChar[2]);
+                    if (n >= 1 && n <= 20) rankCandidates.push({ value: String(n), score: index === 0 ? 1 : 3 });
+                }
+            });
+
+            const rowRankMatches = String(rowText || '').matchAll(/(^|[^0-9])(\d{1,2})位($|[^0-9])/g);
+            for (const m of rowRankMatches) {
+                const n = Number(m[2]);
+                if (n >= 1 && n <= 20) rankCandidates.push({ value: String(n), score: 4 });
+            }
+
+            rankCandidates.sort((a, b) => a.score - b.score);
+            return rankCandidates.length ? rankCandidates[0].value : '';
+        }
+
+        function pickPointsNumber(cells, rankNum) {
+            const nums = cells
+                .map(v => {
+                    const compact = String(v || '').replace(/\s+/g, '');
+                    const exact = compact.match(/^\d{1,3}$/);
+                    return exact ? exact[0] : '';
+                })
+                .filter(Boolean)
+                .filter(v => v !== rankNum)
+                .filter(v => Number(v) < 200);
+
+            if (nums.length >= 2) return nums[1];
+            if (nums.length >= 1) return nums[0];
+            return '--';
+        }
+
+        function parseStandings(html) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const rows = Array.from(doc.querySelectorAll('tr'));
+            const standings = {};
+
+            rows.forEach(row => {
+                const cells = Array.from(row.querySelectorAll('th,td')).map(td => td.textContent.trim()).filter(Boolean);
+                const rowText = row.textContent.replace(/\s+/g, ' ').trim();
+                const rowCompact = normalizeTeamName(row.textContent);
+
+                if (cells.length < 2) return;
+
+                const knownTeams = ["上越", "松本国際", "富山第一", "帝京長岡2nd", "富山U18", "星稜", "新潟U18"];
+                const matchedTeam = knownTeams.find(team => {
+                    return teamAliases(team).some(alias => rowCompact.includes(normalizeTeamName(alias)));
+                });
+
+                if (!matchedTeam) return;
+
+                const rankNum = pickRankNumber(cells, rowText);
+                if (!rankNum) return;
+
+                const pointsNum = pickPointsNumber(cells, rankNum);
+
+                standings[normalizeTeamName(matchedTeam)] = {
+                    team: matchedTeam,
+                    rankNum,
+                    pointsStr: pointsNum || '--'
+                };
+            });
+
+            if (!standings[normalizeTeamName('上越')]) {
+                throw new Error('Joetsu standing not found');
+            }
+
+            return standings;
+        }
+
+        function findTeamStanding(standings, teamName) {
+            const aliases = teamAliases(teamName);
+            for (const alias of aliases) {
+                const key = normalizeTeamName(alias);
+                if (standings[key]) return standings[key];
+            }
+
+            const keys = Object.keys(standings);
+            const matchedKey = keys.find(key => aliases.some(alias => key.includes(normalizeTeamName(alias)) || normalizeTeamName(alias).includes(key)));
+            return matchedKey ? standings[matchedKey] : null;
+        }
+
+        async function fetchStandingsByProxy(proxy) {
+            const raw = await fetchWithTimeout(proxy.url, proxy.timeout);
+            const html = extractHtml(proxy.name, raw);
+            return parseStandings(html);
+        }
+
+        renderFallbackRanks();
+
+        const cached = readCache();
+        if (cached && cached.standings) {
+            renderRanksFromStandings(cached.standings, 'cache');
+        }
+
+        const proxies = [
+            {
+                name: 'allorigins',
+                url: `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&_=${Date.now()}`,
+                timeout: 2600
+            },
+            {
+                name: 'corsproxy',
+                url: `https://corsproxy.io/?${encodeURIComponent(targetUrl)}&_=${Date.now()}`,
+                timeout: 2600
+            },
+            {
+                name: 'codetabs',
+                url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}&_=${Date.now()}`,
+                timeout: 2600
+            }
+        ];
+
+        try {
+            const standings = await Promise.race([
+                Promise.any(proxies.map(fetchStandingsByProxy)),
+                timeoutPromise(3200)
+            ]);
+
+            renderRanksFromStandings(standings, 'live');
+            saveCache(standings);
+        } catch (err) {
+            console.warn("Soccer standings fetch failed:", err);
+
+            if (!cached) {
+                renderFallbackRanks();
+            }
+
+            setTimeout(() => updateMatchRanks(match), 10000);
+        }
     }
 
     function updateClock() {
