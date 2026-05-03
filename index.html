@@ -480,7 +480,7 @@
                 const prob = data.hourly.precipitation_probability[i];
                 const temp = Math.round(data.hourly.temperature_2m[i]);
                 const wind = Math.round(data.hourly.wind_speed_10m[i]);
-                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h}時</div><div class="h-icon">${weatherIcons[data.hourly.weather_code[i]]}</div><div class="h-prob">${prob}%</div><div class="h-temp">${temp}℃</div><div class="h-wind">🍃${wind}m/s</div></div>`;
+                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h}時</div><div class="h-icon">${weatherIcons[data.hourly.weather_code[i]]}</div><div class="h-prob">${prob}%</div><div class="h-temp">${temp}℃</div><div class="h-wind">${wind}m/s</div></div>`;
             }
         });
 
@@ -489,7 +489,7 @@
         for(let i=0; i<7; i++) {
             const d = new Date(data.daily.time[i]);
             const wind = Math.round(data.daily.wind_speed_10m_max[i]);
-            wBox.innerHTML += `<div class="w-item"><div class="w-date">${d.getDate()}(${days[d.getDay()]})</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div style="color:red">${Math.round(data.daily.temperature_2m_max[i])}</div><div style="color:blue">${Math.round(data.daily.temperature_2m_min[i])}</div><div class="w-wind">🍃${wind}m/s</div></div>`;
+            wBox.innerHTML += `<div class="w-item"><div class="w-date">${d.getDate()}(${days[d.getDay()]})</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div style="color:red">${Math.round(data.daily.temperature_2m_max[i])}</div><div style="color:blue">${Math.round(data.daily.temperature_2m_min[i])}</div><div class="w-wind">${wind}m/s</div></div>`;
         }
         document.getElementById('sun-times-inline').innerText = `🌅${data.daily.sunrise[0].split('T')[1]} 🌇${data.daily.sunset[0].split('T')[1]}`;
     }
