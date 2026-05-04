@@ -28,40 +28,43 @@
             width: 100%; max-width: 430px; min-height: 100vh;
             background: var(--bg-gradient);
             display: flex; flex-direction: column; gap: 10px;
-            padding: 10px 12px 60px;
+            padding: 10px 10px 60px;
             box-sizing: border-box;
         }
 
         #datetime-section { text-align: center; margin: 5px 0; }
-        #date { font-size: 1rem; font-weight: 700; color: var(--text-sub); }
+        #date { font-size: 0.95rem; font-weight: 700; color: var(--text-sub); white-space: nowrap; }
         #time { font-size: 3.5rem; font-weight: 900; margin: -5px 0; letter-spacing: 1px; }
 
         #quote-section {
-            text-align: center; padding: 5px 10px 15px;
+            text-align: center; padding: 5px 8px 15px;
             min-height: 4.2em; display: flex; flex-direction: column; justify-content: center;
         }
-        .q-text { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); line-height: 1.5; padding: 0 10px; }
+        .q-text { font-size: 0.75rem; font-weight: 700; color: var(--text-sub); line-height: 1.5; padding: 0 8px; }
         .q-author { font-size: 0.65rem; color: #a1887f; margin-top: 4px; font-weight: 700; }
 
         .glass-card {
             background: var(--glass-bg); backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px); border: 2px solid var(--glass-border);
-            border-radius: 20px; padding: 14px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-radius: 20px; padding: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
 
-        .section-title { font-size: 0.8rem; font-weight: 900; color: var(--text-sub); margin: 0; display: flex; align-items: center; height: 1.5rem; }
+        .section-title { font-size: 0.8rem; font-weight: 900; color: var(--text-sub); margin: 0; display: flex; align-items: center; height: 1.5rem; white-space: nowrap; }
 
         .hourly-section-header {
             display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; height: 1.5rem;
         }
         .sun-times-container { display: flex; align-items: center; gap: 8px; height: 100%; }
-        .sun-times-inline { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); line-height: 1.5rem; }
+        .sun-times-inline { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); line-height: 1.5rem; white-space: nowrap; }
         .weather-location {
             font-size: 0.6rem;
             color: #8d6e63;
             font-weight: 900;
             text-align: right;
             margin: -4px 0 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .hourly-scroll { display: flex; overflow-x: auto; gap: 14px; padding: 2px 0 8px; }
@@ -70,17 +73,18 @@
             display: flex; flex-direction: column; align-items: center; 
             min-width: 46px; gap: 4px; 
         }
-        .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); }
-        .h-icon { font-size: 1.4rem; height: 1.6rem; display: flex; align-items: center; margin: 2px 0; }
-        .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; margin-bottom: 0; }
-        .h-temp { font-size: 0.65rem; color: #f44336; font-weight: 900; line-height: 1; }
-        .h-wind { font-size: 0.6rem; color: #607d8b; font-weight: 900; line-height: 1; }
+        .h-time { font-size: 0.7rem; font-weight: 700; color: var(--text-sub); height: 0.9rem; line-height: 0.9rem; }
+        .h-icon { font-size: 1.4rem; height: 1.6rem; display: flex; align-items: center; justify-content: center; margin: 2px 0; }
+        .h-prob { font-size: 0.65rem; color: #03a9f4; font-weight: 900; margin-bottom: 0; height: 0.8rem; line-height: 0.8rem; }
+        .h-temp { font-size: 0.65rem; color: #f44336; font-weight: 900; height: 0.8rem; line-height: 0.8rem; }
+        .h-wind { font-size: 0.6rem; color: #607d8b; font-weight: 900; height: 0.8rem; line-height: 0.8rem; white-space: nowrap; }
 
         .tomorrow-row {
-            margin-top: 8px; padding: 8px 12px; background: rgba(255,255,255,0.85);
+            margin-top: 8px; padding: 8px 10px; background: rgba(255,255,255,0.85);
             border-radius: 12px; border: 1px solid rgba(0,0,0,0.03);
             font-size: 0.75rem; font-weight: 900; color: var(--text-sub);
             display: flex; align-items: center; justify-content: space-between;
+            gap: 6px; white-space: nowrap;
         }
 
         .p-container { display: flex; flex-direction: column; gap: 8px; }
@@ -88,11 +92,56 @@
         .p-label { padding: 6px; font-size: 0.75rem; font-weight: 900; text-align: center; background: #fff; }
         .p-card img { width: 100%; height: auto; display: block; }
 
-        .weekly-grid { display: flex; justify-content: space-between; gap: 4px; }
-        .w-item { flex: 1; text-align: center; font-size: 0.65rem; font-weight: 700; }
-        .w-date { font-size: 0.6rem; color: var(--text-sub); margin-bottom: 2px; }
-        .w-icon { font-size: 1.3rem; margin: 3px 0; display: block; min-height: 1.5rem; }
-        .w-wind { color: #607d8b; font-size: 0.58rem; font-weight: 900; margin-top: 2px; }
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            gap: 2px;
+            align-items: start;
+        }
+        .w-item {
+            min-width: 0;
+            text-align: center;
+            font-size: 0.62rem;
+            font-weight: 700;
+            display: grid;
+            grid-template-rows: 0.9rem 1.6rem 0.85rem 0.85rem 0.85rem;
+            align-items: center;
+            justify-items: center;
+        }
+        .w-date {
+            font-size: 0.56rem;
+            color: var(--text-sub);
+            height: 0.9rem;
+            line-height: 0.9rem;
+            white-space: nowrap;
+        }
+        .w-icon {
+            font-size: 1.25rem;
+            height: 1.6rem;
+            line-height: 1.6rem;
+            display: block;
+            min-height: 1.6rem;
+        }
+        .w-max {
+            color: red;
+            height: 0.85rem;
+            line-height: 0.85rem;
+            white-space: nowrap;
+        }
+        .w-min {
+            color: blue;
+            height: 0.85rem;
+            line-height: 0.85rem;
+            white-space: nowrap;
+        }
+        .w-wind {
+            color: #607d8b;
+            font-size: 0.54rem;
+            font-weight: 900;
+            height: 0.85rem;
+            line-height: 0.85rem;
+            white-space: nowrap;
+        }
 
         .match-box {
             background: rgba(255,255,255,0.9); border-radius: 15px;
@@ -100,22 +149,32 @@
             display: flex; flex-direction: column; gap: 4px;
             text-align: center;
         }
-        .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .nm-date   { font-size: 0.9rem; font-weight: 900; color: var(--text-main); margin-top: 2px; }
-        .nm-teams  { font-size: 0.85rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 4px 0; flex-wrap: wrap; }
-        .nm-rank   { font-size: 0.6rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; display: inline-flex; align-items: center; gap: 1px; min-width: 2.2em; justify-content: center; }
+        .nm-header { font-size: 0.7rem; font-weight: 900; color: #43a047; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap; }
+        .nm-date   { font-size: 0.9rem; font-weight: 900; color: var(--text-main); margin-top: 2px; white-space: nowrap; }
+        .nm-teams  { font-size: 0.82rem; font-weight: 700; color: var(--text-sub); display: flex; align-items: center; justify-content: center; gap: 4px; margin: 4px 0; flex-wrap: nowrap; white-space: nowrap; }
+        .nm-rank   { font-size: 0.58rem; color: #a1887f; background: #f0f0f0; padding: 1px 4px; border-radius: 4px; margin-left: 2px; font-weight: 700; display: inline-flex; align-items: center; gap: 1px; min-width: 2.2em; justify-content: center; white-space: nowrap; }
         .nm-rank-live { color: #2575fc; background: #eef5ff; }
         .nm-rank-cache { color: #8d6e63; background: #f5f1ee; }
         .nm-rank-loading:after { content: '...'; animation: rankDots 1.5s infinite; }
         @keyframes rankDots { 0%, 20% { content: '.'; } 40% { content: '..'; } 60% { content: '...'; } }
-        .nm-venue  { font-size: 0.7rem; color: #a1887f; font-weight: 700; margin-top: 2px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 4px; }
+        .nm-venue  { font-size: 0.7rem; color: #a1887f; font-weight: 700; margin-top: 2px; border-top: 1px dashed rgba(0,0,0,0.05); padding-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        @media (max-width: 390px) {
+            .phone-canvas { padding-left: 8px; padding-right: 8px; }
+            .glass-card { padding: 11px; }
+            .weekly-grid { gap: 1px; }
+            .w-item { font-size: 0.6rem; }
+            .w-date { font-size: 0.53rem; }
+            .w-wind { font-size: 0.5rem; }
+            .nm-teams { font-size: 0.78rem; }
+        }
     </style>
 </head>
 <body>
 
 <div class="phone-canvas">
     <header id="datetime-section">
-        <div id="date">--月--日 (--)</div>
+        <div id="date">----年--月--日 (--)</div>
         <div id="time">00:00</div>
     </header>
 
@@ -176,112 +235,113 @@
     };
 
     const QUOTES = [
-        { text: "ハングリーであれ。愚かであれ。", author: "Steve Jobs" },
         { text: "素晴らしい仕事をする唯一の方法は、その仕事を愛することだ。", author: "Steve Jobs" },
-        { text: "失敗は、より賢明に再挑戦するための機会にすぎない。", author: "Henry Ford" },
-        { text: "情熱を失わずに失敗を重ね続けられるのが成功だ。", author: "Winston Churchill" },
-        { text: "行動を伴わないビジョンは、ただの白昼夢。ビジョンのない行動は、ただの悪夢だ。", author: "Japanese Proverb" },
-        { text: "できると思えばできる。できないと思えばできない。", author: "Henry Ford" },
-        { text: "一番大切なのは、人生を楽しむこと。幸せを感じること、それだけです。", author: "Audrey Hepburn" },
+        { text: "あなたの時間は限られている。他人の人生を生きて無駄にしてはいけない。", author: "Steve Jobs" },
+        { text: "最も重要な決定とは、何をするかではなく、何をしないかを決めることだ。", author: "Steve Jobs" },
+        { text: "旅の過程にこそ価値がある。", author: "Steve Jobs" },
         { text: "夢を見ることができれば、それは実現できる。", author: "Walt Disney" },
+        { text: "不可能に思えることでも、やってみれば楽しい。", author: "Walt Disney" },
+        { text: "始める方法は、話すのをやめて動き出すことだ。", author: "Walt Disney" },
+        { text: "できると思えばできる。できないと思えばできない。", author: "Henry Ford" },
+        { text: "失敗は、より賢明に再挑戦するための機会にすぎない。", author: "Henry Ford" },
+        { text: "学ぶことをやめた人は老人である。学び続ける人は若い。", author: "Henry Ford" },
         { text: "成功とは、失敗を重ねても情熱を失わないことだ。", author: "Winston Churchill" },
+        { text: "情熱を失わずに失敗を重ね続けられるのが成功だ。", author: "Winston Churchill" },
         { text: "昨日から学び、今日を生き、明日に希望を持て。", author: "Albert Einstein" },
-        { text: "人生に失敗がないと、人生を失敗する。", author: "Shigeru Mizuki" },
-        { text: "努力する人は希望を語り、怠ける人は不満を語る。", author: "Inazo Nitobe" },
-        { text: "下を向いていたら、虹を見つけることはできない。", author: "Charlie Chaplin" },
-        { text: "今日という日は、残りの人生の最初の日である。", author: "Charles Dederich" },
-        { text: "チャンスは準備された心に降り立つ。", author: "Louis Pasteur" },
-        { text: "天才とは、1パーセントのひらめきと99パーセントの努力である。", author: "Thomas Edison" },
-        { text: "私は失敗したことがない。ただ、うまくいかない方法を見つけただけだ。", author: "Thomas Edison" },
-        { text: "為せば成る。為さねば成らぬ何事も。", author: "Uesugi Yozan" },
-        { text: "心が変われば行動が変わる。行動が変われば習慣が変わる。", author: "William James" },
-        { text: "最も強い者が生き残るのではない。変化できる者が生き残る。", author: "Charles Darwin" },
-        { text: "人間は考える葦である。", author: "Blaise Pascal" },
         { text: "困難の中に、機会がある。", author: "Albert Einstein" },
-        { text: "成功の反対は失敗ではなく、挑戦しないことだ。", author: "Unknown" },
         { text: "大切なのは、疑問を持ち続けることだ。", author: "Albert Einstein" },
+        { text: "想像力は知識よりも大切だ。", author: "Albert Einstein" },
+        { text: "人生は自転車のようなものだ。倒れないためには走り続けなければならない。", author: "Albert Einstein" },
+        { text: "人の価値は、その人が得たものではなく、与えたもので測られる。", author: "Albert Einstein" },
+        { text: "私は失敗したことがない。ただ、うまくいかない方法を見つけただけだ。", author: "Thomas Edison" },
+        { text: "天才とは、1パーセントのひらめきと99パーセントの努力である。", author: "Thomas Edison" },
+        { text: "成功できる人は、成功するまでやめない人だ。", author: "Thomas Edison" },
         { text: "準備しておこう。チャンスはいつか訪れる。", author: "Abraham Lincoln" },
         { text: "私はゆっくり歩く。しかし、決して後ろには下がらない。", author: "Abraham Lincoln" },
         { text: "あなたが転んでしまったことに関心はない。そこから立ち上がることに関心がある。", author: "Abraham Lincoln" },
-        { text: "道を知っていることと、実際に歩くことは違う。", author: "Morpheus" },
-        { text: "何かを始めるのに、遅すぎるということはない。", author: "George Eliot" },
-        { text: "小さいことを積み重ねることが、とんでもないところへ行くただ一つの道。", author: "Ichiro" },
-        { text: "結果が出ないとき、どういう自分でいられるかが大事。", author: "Ichiro" },
-        { text: "壁というのは、できる人にしかやってこない。", author: "Ichiro" },
-        { text: "苦しいから逃げるのではない。逃げるから苦しくなる。", author: "William James" },
-        { text: "一日一生。今日を一生と思って生きる。", author: "Sakaiya Taichi" },
-        { text: "念ずれば花ひらく。", author: "Sakamura Shinmin" },
+        { text: "今日できることを明日に延ばすな。", author: "Benjamin Franklin" },
+        { text: "時間を浪費するな。人生は時間でできている。", author: "Benjamin Franklin" },
+        { text: "準備を怠ることは、失敗の準備をすることだ。", author: "Benjamin Franklin" },
+        { text: "できることから始めなさい。今いる場所で、今あるもので。", author: "Theodore Roosevelt" },
+        { text: "信じることができれば、半分は成し遂げたようなものだ。", author: "Theodore Roosevelt" },
+        { text: "行動こそが、恐怖を消すもっとも確かな方法だ。", author: "Theodore Roosevelt" },
         { text: "明日死ぬかのように生きよ。永遠に生きるかのように学べ。", author: "Mahatma Gandhi" },
-        { text: "弱い者ほど相手を許すことができない。許すということは強さの証だ。", author: "Mahatma Gandhi" },
         { text: "速度を上げるばかりが人生ではない。", author: "Mahatma Gandhi" },
         { text: "あなたがこの世で見たいと願う変化に、あなた自身がなりなさい。", author: "Mahatma Gandhi" },
         { text: "最大の名誉は倒れないことではなく、倒れるたびに起き上がることだ。", author: "Confucius" },
         { text: "止まりさえしなければ、どんなにゆっくりでも進めばよい。", author: "Confucius" },
         { text: "過ちて改めざる、これを過ちという。", author: "Confucius" },
         { text: "学びて思わざれば則ち罔し。思いて学ばざれば則ち殆し。", author: "Confucius" },
-        { text: "千里の道も一歩から。", author: "Laozi" },
-        { text: "人を知る者は智なり。自ら知る者は明なり。", author: "Laozi" },
-        { text: "足るを知る者は富む。", author: "Laozi" },
-        { text: "急がば回れ。", author: "Japanese Proverb" },
-        { text: "継続は力なり。", author: "Japanese Proverb" },
-        { text: "七転び八起き。", author: "Japanese Proverb" },
-        { text: "石の上にも三年。", author: "Japanese Proverb" },
-        { text: "初心忘るべからず。", author: "Zeami" },
-        { text: "面白きこともなき世を面白く。", author: "Takasugi Shinsaku" },
-        { text: "夢なき者に成功なし。", author: "Yoshida Shoin" },
-        { text: "至誠にして動かざる者は、未だこれ有らざるなり。", author: "Yoshida Shoin" },
-        { text: "人間到る処青山あり。", author: "Tsukioka Yoshitoshi" },
-        { text: "花は桜木、人は武士。", author: "Japanese Proverb" },
-        { text: "冬来たりなば春遠からじ。", author: "Percy Shelley" },
-        { text: "希望とは、目覚めている人間が見る夢である。", author: "Aristotle" },
-        { text: "幸福は自分次第である。", author: "Aristotle" },
-        { text: "良い習慣は、あらゆる成功の母である。", author: "Aristotle" },
-        { text: "汝自身を知れ。", author: "Socrates" },
-        { text: "生きるために食べよ。食べるために生きるな。", author: "Socrates" },
-        { text: "賢者は、見つけるより多くの機会を作る。", author: "Francis Bacon" },
-        { text: "知識は力なり。", author: "Francis Bacon" },
-        { text: "人はパンのみにて生きるにあらず。", author: "Bible" },
-        { text: "求めよ、さらば与えられん。", author: "Bible" },
-        { text: "光は闇の中に輝いている。", author: "Bible" },
-        { text: "運命は勇者に微笑む。", author: "Virgil" },
-        { text: "幸運は大胆な者を助ける。", author: "Virgil" },
-        { text: "今をつかめ。", author: "Horace" },
-        { text: "人生は短く、技術は長い。", author: "Hippocrates" },
-        { text: "経験は最良の教師である。", author: "Julius Caesar" },
-        { text: "来た、見た、勝った。", author: "Julius Caesar" },
-        { text: "人の価値は、その人が得たものではなく、与えたもので測られる。", author: "Albert Einstein" },
-        { text: "想像力は知識よりも大切だ。", author: "Albert Einstein" },
-        { text: "常識とは、18歳までに身につけた偏見のコレクションである。", author: "Albert Einstein" },
-        { text: "シンプルであることは究極の洗練である。", author: "Leonardo da Vinci" },
-        { text: "学ぶことをやめた人は老人である。学び続ける人は若い。", author: "Henry Ford" },
-        { text: "あなたの時間は限られている。他人の人生を生きて無駄にしてはいけない。", author: "Steve Jobs" },
-        { text: "最も重要な決定とは、何をするかではなく、何をしないかを決めることだ。", author: "Steve Jobs" },
-        { text: "旅の過程にこそ価値がある。", author: "Steve Jobs" },
-        { text: "未来を予測する最良の方法は、それを発明することだ。", author: "Alan Kay" },
-        { text: "完璧を恐れるな。完璧になどなれないのだから。", author: "Salvador Dali" },
-        { text: "チャンスは、それを待つ者ではなく、動く者に訪れる。", author: "Unknown" },
-        { text: "できることから始めなさい。今いる場所で、今あるもので。", author: "Theodore Roosevelt" },
-        { text: "信じることができれば、半分は成し遂げたようなものだ。", author: "Theodore Roosevelt" },
-        { text: "暗闇を呪うより、一本のろうそくを灯しなさい。", author: "Chinese Proverb" },
-        { text: "人生は自転車のようなものだ。倒れないためには走り続けなければならない。", author: "Albert Einstein" },
-        { text: "何者かになりたいなら、まず自分自身になりなさい。", author: "Unknown" },
-        { text: "今日できることを明日に延ばすな。", author: "Benjamin Franklin" },
-        { text: "時間を浪費するな。人生は時間でできている。", author: "Benjamin Franklin" },
-        { text: "準備を怠ることは、失敗の準備をすることだ。", author: "Benjamin Franklin" },
-        { text: "笑顔は一番安い美容法である。", author: "Unknown" },
         { text: "自分に勝つことが、最も偉大な勝利である。", author: "Plato" },
         { text: "勇気とは、恐れを知りながら進むことだ。", author: "Plato" },
+        { text: "幸福は自分次第である。", author: "Aristotle" },
+        { text: "良い習慣は、あらゆる成功の母である。", author: "Aristotle" },
+        { text: "希望とは、目覚めている人間が見る夢である。", author: "Aristotle" },
+        { text: "汝自身を知れ。", author: "Socrates" },
+        { text: "知識は力なり。", author: "Francis Bacon" },
+        { text: "賢者は、見つけるより多くの機会を作る。", author: "Francis Bacon" },
+        { text: "未来を予測する最良の方法は、それを発明することだ。", author: "Alan Kay" },
+        { text: "シンプルであることは究極の洗練である。", author: "Leonardo da Vinci" },
+        { text: "経験は決して間違わない。間違うのは判断だけだ。", author: "Leonardo da Vinci" },
+        { text: "完璧を恐れるな。完璧になどなれないのだから。", author: "Salvador Dali" },
+        { text: "結果が出ないとき、どういう自分でいられるかが大事。", author: "Ichiro" },
+        { text: "小さいことを積み重ねることが、とんでもないところへ行くただ一つの道。", author: "Ichiro" },
+        { text: "壁というのは、できる人にしかやってこない。", author: "Ichiro" },
+        { text: "努力せずに何かできるようになる人のことを天才というのなら、僕はそうじゃない。", author: "Ichiro" },
+        { text: "失敗したところでやめるから失敗になる。成功するところまで続ければ成功になる。", author: "Konosuke Matsushita" },
+        { text: "道は無限にある。", author: "Konosuke Matsushita" },
+        { text: "雨が降れば傘をさす。素直な心で生きることが大切。", author: "Konosuke Matsushita" },
+        { text: "こけたら、立ちなはれ。", author: "Konosuke Matsushita" },
+        { text: "努力する人は希望を語り、怠ける人は不満を語る。", author: "Inazo Nitobe" },
+        { text: "一日一生。今日を一生と思って生きる。", author: "Taichi Sakaiya" },
+        { text: "念ずれば花ひらく。", author: "Shinmin Sakamura" },
+        { text: "初心忘るべからず。", author: "Zeami" },
+        { text: "夢なき者に成功なし。", author: "Yoshida Shoin" },
+        { text: "至誠にして動かざる者は、未だこれ有らざるなり。", author: "Yoshida Shoin" },
+        { text: "為せば成る。為さねば成らぬ何事も。", author: "Uesugi Yozan" },
+        { text: "面白きこともなき世を面白く。", author: "Takasugi Shinsaku" },
+        { text: "下を向いていたら、虹を見つけることはできない。", author: "Charlie Chaplin" },
+        { text: "人生は恐れなければ、とても素晴らしいものだ。", author: "Charlie Chaplin" },
+        { text: "一番大切なのは、人生を楽しむこと。幸せを感じること、それだけです。", author: "Audrey Hepburn" },
+        { text: "不可能なことなどない。その言葉自体が、私は可能だと言っている。", author: "Audrey Hepburn" },
+        { text: "人生は一度きり。でも正しく生きれば、一度で十分。", author: "Mae West" },
+        { text: "何かを始めるのに、遅すぎるということはない。", author: "George Eliot" },
+        { text: "冬来たりなば春遠からじ。", author: "Percy Shelley" },
+        { text: "今をつかめ。", author: "Horace" },
+        { text: "運命は勇者に微笑む。", author: "Virgil" },
+        { text: "幸運は大胆な者を助ける。", author: "Virgil" },
+        { text: "人生は短く、技術は長い。", author: "Hippocrates" },
+        { text: "来た、見た、勝った。", author: "Julius Caesar" },
+        { text: "経験は最良の教師である。", author: "Julius Caesar" },
         { text: "人生で最も大切なことは、方向を決めることだ。", author: "Seneca" },
         { text: "幸運とは、準備と機会が出会う場所である。", author: "Seneca" },
         { text: "困難は人を鍛える。", author: "Seneca" },
-        { text: "失敗したところでやめるから失敗になる。成功するところまで続ければ成功になる。", author: "Konosuke Matsushita" },
-        { text: "雨が降れば傘をさす。素直な心で生きることが大切。", author: "Konosuke Matsushita" },
-        { text: "道は無限にある。", author: "Konosuke Matsushita" },
-        { text: "こけたら、立ちなはれ。", author: "Konosuke Matsushita" },
-        { text: "成功するまで続ければ、それは失敗ではない。", author: "Unknown" },
-        { text: "人生は一度きり。でも正しく生きれば、一度で十分。", author: "Mae West" },
-        { text: "変化を望むなら、自分から始めることだ。", author: "Unknown" },
-        { text: "一歩踏み出せば、景色は変わる。", author: "Unknown" }
+        { text: "心が変われば行動が変わる。行動が変われば習慣が変わる。", author: "William James" },
+        { text: "苦しいから逃げるのではない。逃げるから苦しくなる。", author: "William James" },
+        { text: "最も強い者が生き残るのではない。変化できる者が生き残る。", author: "Charles Darwin" },
+        { text: "人間は考える葦である。", author: "Blaise Pascal" },
+        { text: "チャンスは準備された心に降り立つ。", author: "Louis Pasteur" },
+        { text: "ハングリーであれ。愚かであれ。", author: "Steve Jobs" },
+        { text: "革新は、リーダーと追随者を分ける。", author: "Steve Jobs" },
+        { text: "品質とは、誰も見ていないときにも正しくやることだ。", author: "Henry Ford" },
+        { text: "失敗は成功の母である。", author: "Thomas Edison" },
+        { text: "私は偶然を待たない。自分で作る。", author: "Florence Nightingale" },
+        { text: "自分の仕事に誇りを持ちなさい。そこに未来が生まれる。", author: "Florence Nightingale" },
+        { text: "私は状況の産物ではない。私は自分の決断の産物だ。", author: "Stephen Covey" },
+        { text: "重要なことを優先しなさい。", author: "Stephen Covey" },
+        { text: "成功とは、日々繰り返される小さな努力の合計である。", author: "Robert Collier" },
+        { text: "成功への道は、いつも工事中である。", author: "Lily Tomlin" },
+        { text: "努力なくして成果なし。", author: "Frederick Douglass" },
+        { text: "闘いがなければ、進歩もない。", author: "Frederick Douglass" },
+        { text: "未来は、今日何をするかで決まる。", author: "Mahatma Gandhi" },
+        { text: "できると信じるなら、道は開ける。", author: "Mahatma Gandhi" },
+        { text: "勝つまでやめない。", author: "Nelson Mandela" },
+        { text: "何事も、成し遂げるまではいつも不可能に見える。", author: "Nelson Mandela" },
+        { text: "教育は、世界を変えるために使える最も強力な武器である。", author: "Nelson Mandela" },
+        { text: "成功を祝うのはよいが、失敗から学ぶことの方が大切だ。", author: "Bill Gates" },
+        { text: "自分の不満な顧客こそ、最大の学びの源である。", author: "Bill Gates" },
+        { text: "素早く動き、常に学び続けなさい。", author: "Jeff Bezos" },
+        { text: "発明には、長い間誤解される覚悟が必要だ。", author: "Jeff Bezos" }
     ];
 
     function renderQuote() {
@@ -497,7 +557,7 @@
     function updateClock() {
         const now = new Date();
         const days = ['日', '月', '火', '水', '木', '金', '土'];
-        document.getElementById('date').innerText = (now.getMonth() + 1) + '月' + now.getDate() + '日 (' + days[now.getDay()] + ')';
+        document.getElementById('date').innerText = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 (' + days[now.getDay()] + ')';
         document.getElementById('time').innerText = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
     }
 
@@ -577,7 +637,7 @@
         for(let i=0; i<7; i++) {
             const d = new Date(data.daily.time[i]);
             const wind = Math.round(data.daily.wind_speed_10m_max[i]);
-            wBox.innerHTML += `<div class="w-item"><div class="w-date">${d.getDate()}(${days[d.getDay()]})</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div style="color:red">${Math.round(data.daily.temperature_2m_max[i])}</div><div style="color:blue">${Math.round(data.daily.temperature_2m_min[i])}</div><div class="w-wind">${wind}m/s</div></div>`;
+            wBox.innerHTML += `<div class="w-item"><div class="w-date">${d.getDate()}(${days[d.getDay()]})</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div class="w-max">${Math.round(data.daily.temperature_2m_max[i])}</div><div class="w-min">${Math.round(data.daily.temperature_2m_min[i])}</div><div class="w-wind">${wind}m/s</div></div>`;
         }
         document.getElementById('sun-times-inline').innerText = `🌅${data.daily.sunrise[0].split('T')[1]} 🌇${data.daily.sunset[0].split('T')[1]}`;
     }
