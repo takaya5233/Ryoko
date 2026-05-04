@@ -56,6 +56,13 @@
         }
         .sun-times-container { display: flex; align-items: center; gap: 8px; height: 100%; }
         .sun-times-inline { font-size: 0.65rem; font-weight: 700; color: var(--text-sub); line-height: 1.5rem; }
+        .weather-location {
+            font-size: 0.6rem;
+            color: #8d6e63;
+            font-weight: 900;
+            text-align: right;
+            margin: -4px 0 6px;
+        }
         
         .hourly-scroll { display: flex; overflow-x: auto; gap: 14px; padding: 2px 0 8px; }
         .hourly-scroll::-webkit-scrollbar { display: none; }
@@ -124,6 +131,7 @@
                 <div id="sun-times-inline" class="sun-times-inline"></div>
             </div>
         </div>
+        <div id="weather-location" class="weather-location">📍 現在地確認中...</div>
         <div id="hourly-list" class="hourly-scroll"></div>
         <div id="tomorrow-box" class="tomorrow-row">明日情報読み込み中...</div>
     </section>
@@ -167,10 +175,125 @@
         ]
     };
 
-    const QUOTES = [{ text: "ハングリーであれ。愚かであれ。", author: "Steve Jobs" }, { text: "素晴らしい仕事をする唯一の方法は、その仕事を愛することだ。", author: "Steve Jobs" }, { text: "失敗は、より賢明に再挑戦するための機会にすぎない。", author: "Henry Ford" }, { text: "情熱を失わずに失敗を重ね続けられるのが成功だ。", author: "Winston Churchill" }, { text: "行動を伴わないビジョンは、ただの白昼夢. ビジョンのない行動は、ただの悪夢だ。", author: "Japanese Proverb" }];
+    const QUOTES = [
+        { text: "ハングリーであれ。愚かであれ。", author: "Steve Jobs" },
+        { text: "素晴らしい仕事をする唯一の方法は、その仕事を愛することだ。", author: "Steve Jobs" },
+        { text: "失敗は、より賢明に再挑戦するための機会にすぎない。", author: "Henry Ford" },
+        { text: "情熱を失わずに失敗を重ね続けられるのが成功だ。", author: "Winston Churchill" },
+        { text: "行動を伴わないビジョンは、ただの白昼夢。ビジョンのない行動は、ただの悪夢だ。", author: "Japanese Proverb" },
+        { text: "できると思えばできる。できないと思えばできない。", author: "Henry Ford" },
+        { text: "一番大切なのは、人生を楽しむこと。幸せを感じること、それだけです。", author: "Audrey Hepburn" },
+        { text: "夢を見ることができれば、それは実現できる。", author: "Walt Disney" },
+        { text: "成功とは、失敗を重ねても情熱を失わないことだ。", author: "Winston Churchill" },
+        { text: "昨日から学び、今日を生き、明日に希望を持て。", author: "Albert Einstein" },
+        { text: "人生に失敗がないと、人生を失敗する。", author: "Shigeru Mizuki" },
+        { text: "努力する人は希望を語り、怠ける人は不満を語る。", author: "Inazo Nitobe" },
+        { text: "下を向いていたら、虹を見つけることはできない。", author: "Charlie Chaplin" },
+        { text: "今日という日は、残りの人生の最初の日である。", author: "Charles Dederich" },
+        { text: "チャンスは準備された心に降り立つ。", author: "Louis Pasteur" },
+        { text: "天才とは、1パーセントのひらめきと99パーセントの努力である。", author: "Thomas Edison" },
+        { text: "私は失敗したことがない。ただ、うまくいかない方法を見つけただけだ。", author: "Thomas Edison" },
+        { text: "為せば成る。為さねば成らぬ何事も。", author: "Uesugi Yozan" },
+        { text: "心が変われば行動が変わる。行動が変われば習慣が変わる。", author: "William James" },
+        { text: "最も強い者が生き残るのではない。変化できる者が生き残る。", author: "Charles Darwin" },
+        { text: "人間は考える葦である。", author: "Blaise Pascal" },
+        { text: "困難の中に、機会がある。", author: "Albert Einstein" },
+        { text: "成功の反対は失敗ではなく、挑戦しないことだ。", author: "Unknown" },
+        { text: "大切なのは、疑問を持ち続けることだ。", author: "Albert Einstein" },
+        { text: "準備しておこう。チャンスはいつか訪れる。", author: "Abraham Lincoln" },
+        { text: "私はゆっくり歩く。しかし、決して後ろには下がらない。", author: "Abraham Lincoln" },
+        { text: "あなたが転んでしまったことに関心はない。そこから立ち上がることに関心がある。", author: "Abraham Lincoln" },
+        { text: "道を知っていることと、実際に歩くことは違う。", author: "Morpheus" },
+        { text: "何かを始めるのに、遅すぎるということはない。", author: "George Eliot" },
+        { text: "小さいことを積み重ねることが、とんでもないところへ行くただ一つの道。", author: "Ichiro" },
+        { text: "結果が出ないとき、どういう自分でいられるかが大事。", author: "Ichiro" },
+        { text: "壁というのは、できる人にしかやってこない。", author: "Ichiro" },
+        { text: "苦しいから逃げるのではない。逃げるから苦しくなる。", author: "William James" },
+        { text: "一日一生。今日を一生と思って生きる。", author: "Sakaiya Taichi" },
+        { text: "念ずれば花ひらく。", author: "Sakamura Shinmin" },
+        { text: "明日死ぬかのように生きよ。永遠に生きるかのように学べ。", author: "Mahatma Gandhi" },
+        { text: "弱い者ほど相手を許すことができない。許すということは強さの証だ。", author: "Mahatma Gandhi" },
+        { text: "速度を上げるばかりが人生ではない。", author: "Mahatma Gandhi" },
+        { text: "あなたがこの世で見たいと願う変化に、あなた自身がなりなさい。", author: "Mahatma Gandhi" },
+        { text: "最大の名誉は倒れないことではなく、倒れるたびに起き上がることだ。", author: "Confucius" },
+        { text: "止まりさえしなければ、どんなにゆっくりでも進めばよい。", author: "Confucius" },
+        { text: "過ちて改めざる、これを過ちという。", author: "Confucius" },
+        { text: "学びて思わざれば則ち罔し。思いて学ばざれば則ち殆し。", author: "Confucius" },
+        { text: "千里の道も一歩から。", author: "Laozi" },
+        { text: "人を知る者は智なり。自ら知る者は明なり。", author: "Laozi" },
+        { text: "足るを知る者は富む。", author: "Laozi" },
+        { text: "急がば回れ。", author: "Japanese Proverb" },
+        { text: "継続は力なり。", author: "Japanese Proverb" },
+        { text: "七転び八起き。", author: "Japanese Proverb" },
+        { text: "石の上にも三年。", author: "Japanese Proverb" },
+        { text: "初心忘るべからず。", author: "Zeami" },
+        { text: "面白きこともなき世を面白く。", author: "Takasugi Shinsaku" },
+        { text: "夢なき者に成功なし。", author: "Yoshida Shoin" },
+        { text: "至誠にして動かざる者は、未だこれ有らざるなり。", author: "Yoshida Shoin" },
+        { text: "人間到る処青山あり。", author: "Tsukioka Yoshitoshi" },
+        { text: "花は桜木、人は武士。", author: "Japanese Proverb" },
+        { text: "冬来たりなば春遠からじ。", author: "Percy Shelley" },
+        { text: "希望とは、目覚めている人間が見る夢である。", author: "Aristotle" },
+        { text: "幸福は自分次第である。", author: "Aristotle" },
+        { text: "良い習慣は、あらゆる成功の母である。", author: "Aristotle" },
+        { text: "汝自身を知れ。", author: "Socrates" },
+        { text: "生きるために食べよ。食べるために生きるな。", author: "Socrates" },
+        { text: "賢者は、見つけるより多くの機会を作る。", author: "Francis Bacon" },
+        { text: "知識は力なり。", author: "Francis Bacon" },
+        { text: "人はパンのみにて生きるにあらず。", author: "Bible" },
+        { text: "求めよ、さらば与えられん。", author: "Bible" },
+        { text: "光は闇の中に輝いている。", author: "Bible" },
+        { text: "運命は勇者に微笑む。", author: "Virgil" },
+        { text: "幸運は大胆な者を助ける。", author: "Virgil" },
+        { text: "今をつかめ。", author: "Horace" },
+        { text: "人生は短く、技術は長い。", author: "Hippocrates" },
+        { text: "経験は最良の教師である。", author: "Julius Caesar" },
+        { text: "来た、見た、勝った。", author: "Julius Caesar" },
+        { text: "人の価値は、その人が得たものではなく、与えたもので測られる。", author: "Albert Einstein" },
+        { text: "想像力は知識よりも大切だ。", author: "Albert Einstein" },
+        { text: "常識とは、18歳までに身につけた偏見のコレクションである。", author: "Albert Einstein" },
+        { text: "シンプルであることは究極の洗練である。", author: "Leonardo da Vinci" },
+        { text: "学ぶことをやめた人は老人である。学び続ける人は若い。", author: "Henry Ford" },
+        { text: "あなたの時間は限られている。他人の人生を生きて無駄にしてはいけない。", author: "Steve Jobs" },
+        { text: "最も重要な決定とは、何をするかではなく、何をしないかを決めることだ。", author: "Steve Jobs" },
+        { text: "旅の過程にこそ価値がある。", author: "Steve Jobs" },
+        { text: "未来を予測する最良の方法は、それを発明することだ。", author: "Alan Kay" },
+        { text: "完璧を恐れるな。完璧になどなれないのだから。", author: "Salvador Dali" },
+        { text: "チャンスは、それを待つ者ではなく、動く者に訪れる。", author: "Unknown" },
+        { text: "できることから始めなさい。今いる場所で、今あるもので。", author: "Theodore Roosevelt" },
+        { text: "信じることができれば、半分は成し遂げたようなものだ。", author: "Theodore Roosevelt" },
+        { text: "暗闇を呪うより、一本のろうそくを灯しなさい。", author: "Chinese Proverb" },
+        { text: "人生は自転車のようなものだ。倒れないためには走り続けなければならない。", author: "Albert Einstein" },
+        { text: "何者かになりたいなら、まず自分自身になりなさい。", author: "Unknown" },
+        { text: "今日できることを明日に延ばすな。", author: "Benjamin Franklin" },
+        { text: "時間を浪費するな。人生は時間でできている。", author: "Benjamin Franklin" },
+        { text: "準備を怠ることは、失敗の準備をすることだ。", author: "Benjamin Franklin" },
+        { text: "笑顔は一番安い美容法である。", author: "Unknown" },
+        { text: "自分に勝つことが、最も偉大な勝利である。", author: "Plato" },
+        { text: "勇気とは、恐れを知りながら進むことだ。", author: "Plato" },
+        { text: "人生で最も大切なことは、方向を決めることだ。", author: "Seneca" },
+        { text: "幸運とは、準備と機会が出会う場所である。", author: "Seneca" },
+        { text: "困難は人を鍛える。", author: "Seneca" },
+        { text: "失敗したところでやめるから失敗になる。成功するところまで続ければ成功になる。", author: "Konosuke Matsushita" },
+        { text: "雨が降れば傘をさす。素直な心で生きることが大切。", author: "Konosuke Matsushita" },
+        { text: "道は無限にある。", author: "Konosuke Matsushita" },
+        { text: "こけたら、立ちなはれ。", author: "Konosuke Matsushita" },
+        { text: "成功するまで続ければ、それは失敗ではない。", author: "Unknown" },
+        { text: "人生は一度きり。でも正しく生きれば、一度で十分。", author: "Mae West" },
+        { text: "変化を望むなら、自分から始めることだ。", author: "Unknown" },
+        { text: "一歩踏み出せば、景色は変わる。", author: "Unknown" }
+    ];
 
     function renderQuote() {
-        const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+        const lastIndex = Number(localStorage.getItem('last_quote_index') || '-1');
+        let index = Math.floor(Math.random() * QUOTES.length);
+        if (QUOTES.length > 1) {
+            while (index === lastIndex) {
+                index = Math.floor(Math.random() * QUOTES.length);
+            }
+        }
+        localStorage.setItem('last_quote_index', String(index));
+        const q = QUOTES[index];
         document.getElementById('q-text').textContent = `「${q.text}」`;
         document.getElementById('q-author').textContent = `― ${q.author}`;
     }
@@ -184,28 +307,13 @@
         updateMatchRanks(match);
     }
 
-    /**
-     * 【高速版】上越高校と対戦相手の順位取得ロジック
-     * - まず予定表に登録済みの順位を即表示
-     * - 前回取得済みの順位があればlocalStorageから即更新
-     * - 複数プロキシを同時に走らせ、最初に成功したものを採用
-     * - 2026など年度の数字を順位として拾わないよう、順位候補を1〜20位に限定
-     */
     async function updateMatchRanks(match) {
         const targetUrl = 'https://koko-soccer.com/score/4345';
         const cacheKey = 'joetsu_soccer_standings_cache_v3';
         const cacheMaxAge = 1000 * 60 * 60 * 6;
 
         function normalizeTeamName(name) {
-            return String(name || '')
-                .replace(/\s+/g, '')
-                .replace(/高校/g, '')
-                .replace(/サッカー部/g, '')
-                .replace(/ＦＣ/g, 'FC')
-                .replace(/Ｕ/g, 'U')
-                .replace(/１８/g, '18')
-                .replace(/２ｎｄ/gi, '2nd')
-                .replace(/セカンド/g, '2nd');
+            return String(name || '').replace(/\s+/g, '').replace(/高校/g, '').replace(/サッカー部/g, '').replace(/ＦＣ/g, 'FC').replace(/Ｕ/g, 'U').replace(/１８/g, '18').replace(/２ｎｄ/gi, '2nd').replace(/セカンド/g, '2nd');
         }
 
         function teamAliases(name) {
@@ -228,13 +336,8 @@
             el.classList.remove('nm-rank-loading', 'nm-rank-live', 'nm-rank-cache');
             if (mode === 'live') el.classList.add('nm-rank-live');
             if (mode === 'cache') el.classList.add('nm-rank-cache');
-            if (pointsStr && pointsStr !== '--') {
-                el.textContent = `${rankNum}位`;
-                el.title = `勝点 ${pointsStr}`;
-            } else {
-                el.textContent = `${rankNum}位`;
-                el.title = '';
-            }
+            el.textContent = `${rankNum}位`;
+            el.title = pointsStr && pointsStr !== '--' ? `勝点 ${pointsStr}` : '';
         }
 
         function renderFallbackRanks() {
@@ -245,16 +348,12 @@
         function renderRanksFromStandings(standings, mode) {
             const home = findTeamStanding(standings, match.home);
             const away = findTeamStanding(standings, match.away);
-
             if (home) renderRank('home-rank', home.rankNum, home.pointsStr, mode);
             if (away) renderRank('away-rank', away.rankNum, away.pointsStr, mode);
         }
 
         function saveCache(standings) {
-            localStorage.setItem(cacheKey, JSON.stringify({
-                standings,
-                savedAt: Date.now()
-            }));
+            localStorage.setItem(cacheKey, JSON.stringify({ standings, savedAt: Date.now() }));
         }
 
         function readCache() {
@@ -269,19 +368,14 @@
         }
 
         function timeoutPromise(ms) {
-            return new Promise((_, reject) => {
-                setTimeout(() => reject(new Error('Timeout')), ms);
-            });
+            return new Promise((_, reject) => { setTimeout(() => reject(new Error('Timeout')), ms); });
         }
 
         async function fetchWithTimeout(url, ms) {
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), ms);
             try {
-                const res = await fetch(url, {
-                    signal: controller.signal,
-                    cache: 'no-store'
-                });
+                const res = await fetch(url, { signal: controller.signal, cache: 'no-store' });
                 if (!res.ok) throw new Error('Fetch failed: ' + res.status);
                 return await res.text();
             } finally {
@@ -299,17 +393,14 @@
 
         function pickRankNumber(cells, rowText) {
             const rankCandidates = [];
-
             cells.forEach((cell, index) => {
                 const compact = String(cell || '').replace(/\s+/g, '');
                 const exactRank = compact.match(/^(\d{1,2})位?$/);
                 const withRankChar = compact.match(/(^|[^0-9])(\d{1,2})位($|[^0-9])/);
-
                 if (exactRank) {
                     const n = Number(exactRank[1]);
                     if (n >= 1 && n <= 20) rankCandidates.push({ value: String(n), score: index === 0 ? 1 : 2 });
                 }
-
                 if (withRankChar) {
                     const n = Number(withRankChar[2]);
                     if (n >= 1 && n <= 20) rankCandidates.push({ value: String(n), score: index === 0 ? 1 : 3 });
@@ -327,16 +418,11 @@
         }
 
         function pickPointsNumber(cells, rankNum) {
-            const nums = cells
-                .map(v => {
-                    const compact = String(v || '').replace(/\s+/g, '');
-                    const exact = compact.match(/^\d{1,3}$/);
-                    return exact ? exact[0] : '';
-                })
-                .filter(Boolean)
-                .filter(v => v !== rankNum)
-                .filter(v => Number(v) < 200);
-
+            const nums = cells.map(v => {
+                const compact = String(v || '').replace(/\s+/g, '');
+                const exact = compact.match(/^\d{1,3}$/);
+                return exact ? exact[0] : '';
+            }).filter(Boolean).filter(v => v !== rankNum).filter(v => Number(v) < 200);
             if (nums.length >= 2) return nums[1];
             if (nums.length >= 1) return nums[0];
             return '--';
@@ -352,32 +438,20 @@
                 const cells = Array.from(row.querySelectorAll('th,td')).map(td => td.textContent.trim()).filter(Boolean);
                 const rowText = row.textContent.replace(/\s+/g, ' ').trim();
                 const rowCompact = normalizeTeamName(row.textContent);
-
                 if (cells.length < 2) return;
 
                 const knownTeams = ["上越", "松本国際", "富山第一", "帝京長岡2nd", "富山U18", "星稜", "新潟U18"];
-                const matchedTeam = knownTeams.find(team => {
-                    return teamAliases(team).some(alias => rowCompact.includes(normalizeTeamName(alias)));
-                });
-
+                const matchedTeam = knownTeams.find(team => teamAliases(team).some(alias => rowCompact.includes(normalizeTeamName(alias))));
                 if (!matchedTeam) return;
 
                 const rankNum = pickRankNumber(cells, rowText);
                 if (!rankNum) return;
 
                 const pointsNum = pickPointsNumber(cells, rankNum);
-
-                standings[normalizeTeamName(matchedTeam)] = {
-                    team: matchedTeam,
-                    rankNum,
-                    pointsStr: pointsNum || '--'
-                };
+                standings[normalizeTeamName(matchedTeam)] = { team: matchedTeam, rankNum, pointsStr: pointsNum || '--' };
             });
 
-            if (!standings[normalizeTeamName('上越')]) {
-                throw new Error('Joetsu standing not found');
-            }
-
+            if (!standings[normalizeTeamName('上越')]) throw new Error('Joetsu standing not found');
             return standings;
         }
 
@@ -387,7 +461,6 @@
                 const key = normalizeTeamName(alias);
                 if (standings[key]) return standings[key];
             }
-
             const keys = Object.keys(standings);
             const matchedKey = keys.find(key => aliases.some(alias => key.includes(normalizeTeamName(alias)) || normalizeTeamName(alias).includes(key)));
             return matchedKey ? standings[matchedKey] : null;
@@ -402,43 +475,21 @@
         renderFallbackRanks();
 
         const cached = readCache();
-        if (cached && cached.standings) {
-            renderRanksFromStandings(cached.standings, 'cache');
-        }
+        if (cached && cached.standings) renderRanksFromStandings(cached.standings, 'cache');
 
         const proxies = [
-            {
-                name: 'allorigins',
-                url: `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&_=${Date.now()}`,
-                timeout: 2600
-            },
-            {
-                name: 'corsproxy',
-                url: `https://corsproxy.io/?${encodeURIComponent(targetUrl)}&_=${Date.now()}`,
-                timeout: 2600
-            },
-            {
-                name: 'codetabs',
-                url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}&_=${Date.now()}`,
-                timeout: 2600
-            }
+            { name: 'allorigins', url: `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}&_=${Date.now()}`, timeout: 2600 },
+            { name: 'corsproxy', url: `https://corsproxy.io/?${encodeURIComponent(targetUrl)}&_=${Date.now()}`, timeout: 2600 },
+            { name: 'codetabs', url: `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetUrl)}&_=${Date.now()}`, timeout: 2600 }
         ];
 
         try {
-            const standings = await Promise.race([
-                Promise.any(proxies.map(fetchStandingsByProxy)),
-                timeoutPromise(3200)
-            ]);
-
+            const standings = await Promise.race([Promise.any(proxies.map(fetchStandingsByProxy)), timeoutPromise(3200)]);
             renderRanksFromStandings(standings, 'live');
             saveCache(standings);
         } catch (err) {
             console.warn("Soccer standings fetch failed:", err);
-
-            if (!cached) {
-                renderFallbackRanks();
-            }
-
+            if (!cached) renderFallbackRanks();
             setTimeout(() => updateMatchRanks(match), 10000);
         }
     }
@@ -452,8 +503,46 @@
 
     const weatherIcons = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",61:"🌧️",63:"🌧️",65:"🌧️",80:"🌦️",81:"🌧️",82:"🌧️",95:"⚡"};
 
-    async function fetchWeather(pos) {
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}&current=weather_code&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,sunrise,sunset&timezone=Asia%2FTokyo&wind_speed_unit=ms`;
+    async function updateWeatherLocationName(lat, lon, isFallback) {
+        const locationEl = document.getElementById('weather-location');
+        const cacheKey = `weather_location_name_${lat.toFixed(3)}_${lon.toFixed(3)}`;
+        const cachedName = localStorage.getItem(cacheKey);
+
+        if (cachedName) {
+            locationEl.innerText = isFallback ? `📍 代替地点の天気：${cachedName}` : `📍 現在地の天気：${cachedName}`;
+            return;
+        }
+
+        locationEl.innerText = isFallback ? `📍 代替地点の天気：地名確認中...` : `📍 現在地の天気：地名確認中...`;
+
+        try {
+            const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=ja`);
+            if (!res.ok) throw new Error('Location fetch failed');
+            const data = await res.json();
+
+            const parts = [
+                data.principalSubdivision,
+                data.city,
+                data.locality
+            ].filter(Boolean);
+
+            const uniqueParts = [...new Set(parts)];
+            const placeName = uniqueParts.length ? uniqueParts.join(' ') : data.countryName || '地名取得不可';
+
+            localStorage.setItem(cacheKey, placeName);
+            locationEl.innerText = isFallback ? `📍 代替地点の天気：${placeName}` : `📍 現在地の天気：${placeName}`;
+        } catch (e) {
+            console.error(e);
+            locationEl.innerText = isFallback ? `📍 代替地点の天気：地名取得不可` : `📍 現在地の天気：地名取得不可`;
+        }
+    }
+
+    async function fetchWeather(pos, isFallback) {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        updateWeatherLocationName(lat, lon, isFallback);
+
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=weather_code&hourly=temperature_2m,weather_code,precipitation_probability,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,wind_speed_10m_max,sunrise,sunset&timezone=Asia%2FTokyo&wind_speed_unit=ms`;
         try {
             const res = await fetch(url);
             renderData(await res.json());
@@ -469,7 +558,6 @@
         document.getElementById('tomorrow-box').innerHTML = `
             <span>明日</span>
             <span>${advice}</span>
-            <span style="color:#555">/</span>
             <span style="color:red">${tmrMax}</span><span style="color:#555">/</span><span style="color:blue">${tmrMin}</span>℃
         `;
 
@@ -504,7 +592,11 @@
 
     updateClock(); setInterval(updateClock, 60000);
     renderPikmin(); renderQuote(); renderNextMatch();
-    navigator.geolocation.getCurrentPosition(fetchWeather, () => fetchWeather({coords:{latitude:35.5,longitude:140.1}}));
+    navigator.geolocation.getCurrentPosition(
+        pos => fetchWeather(pos, false),
+        () => fetchWeather({coords:{latitude:35.5,longitude:140.1}}, true),
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 600000 }
+    );
 </script>
 </body>
 </html>
