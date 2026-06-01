@@ -213,11 +213,17 @@
 
 <script>
     const PIKMIN_MONTHLY = {
-        "2026-05": {
-            eventName: "5月のピクミン情報",
+        "2026-06": {
+            eventName: "6月のピクミン情報",
             cards: [
-                { label: "今月のお題", url: "https://lh3.googleusercontent.com/afHeTXZAZ0spg_McMmGWEyqVzgvsAVU2Xx5eCn6K1p1fvkOAKQuBZEcVM13ClEVcXfRS7EBovmEdE8C-mxLNhqy2IXSOwSTtt8ow=e365-pa-nu-w850" },
-                { label: "ボーナス報酬", url: "https://lh3.googleusercontent.com/hJnceMAaxtWGJnBtrntbLOvSCRmSj3-iIPfu3VRRxq-e1Z9vD7rA8E-xuoQTL6xVQNtrV0g8IpaSrUGjMKf6ewc-6M6pBVUPbIg=e365-pa-nu-w850" }
+                {
+                    label: "今月のお題",
+                    url: "https://raw.githubusercontent.com/takaya5233/pikmin-weather/main/6_odai.png"
+                },
+                {
+                    label: "ボーナス報酬",
+                    url: "https://raw.githubusercontent.com/takaya5233/pikmin-weather/main/6_hoshu.png"
+                }
             ]
         }
     };
@@ -420,7 +426,6 @@
             try {
                 const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
                 if (!cached || !cached.standings || !cached.savedAt) return null;
-                if (Date.now() - cached.savedAt > cacheMaxAge) return cached;
                 return cached;
             } catch(e) {
                 return null;
@@ -618,17 +623,29 @@
         document.getElementById('tomorrow-box').innerHTML = `
             <span>明日</span>
             <span>${advice}</span>
-            <span style="color:red">${tmrMax}</span><span style="color:#555">/</span><span style="color:blue">${tmrMin}</span>℃
+            <span><span style="color:red">${tmrMax}</span><span style="color:#555">/</span><span style="color:blue">${tmrMin}</span>℃</span>
         `;
 
         const hBox = document.getElementById('hourly-list'); hBox.innerHTML = '';
+        const sunsetTime = data.daily.sunset[0].split('T')[1];
+        const sunsetHr = parseInt(sunsetTime.split(':')[0]);
+        document.getElementById('sun-times-inline').innerText = `🌅 ${data.daily.sunrise[0].split('T')[1]}  🌇 ${sunsetTime}`;
+
         data.hourly.time.forEach((t, i) => {
             const h = parseInt(t.split('T')[1]);
-            if(t.includes(todayStr) && h >= hr) {
+            if(t.includes(todayStr) && h >= hr && h <= sunsetHr + 1) {
                 const prob = data.hourly.precipitation_probability[i];
                 const temp = Math.round(data.hourly.temperature_2m[i]);
                 const wind = Math.round(data.hourly.wind_speed_10m[i]);
-                hBox.innerHTML += `<div class="hourly-item"><div class="h-time">${h}時</div><div class="h-icon">${weatherIcons[data.hourly.weather_code[i]]}</div><div class="h-prob">${prob}%</div><div class="h-temp">${temp}℃</div><div class="h-wind">${wind}m/s</div></div>`;
+                hBox.innerHTML += `
+                    <div class="hourly-item">
+                        <span class="h-time">${h===hr?'今':h+'時'}</span>
+                        <span class="h-icon">${weatherIcons[data.hourly.weather_code[i]]||"☀️"}</span>
+                        <span class="h-prob">${prob}%</span>
+                        <span class="h-temp">${temp}°</span>
+                        <span class="h-wind">🌀${wind}m</span>
+                    </div>
+                `;
             }
         });
 
@@ -636,27 +653,57 @@
         const days = ['日','月','火','水','木','金','土'];
         for(let i=0; i<7; i++) {
             const d = new Date(data.daily.time[i]);
-            const wind = Math.round(data.daily.wind_speed_10m_max[i]);
-            wBox.innerHTML += `<div class="w-item"><div class="w-date">${d.getDate()}(${days[d.getDay()]})</div><span class="w-icon">${weatherIcons[data.daily.weather_code[i]]}</span><div class="w-max">${Math.round(data.daily.temperature_2m_max[i])}</div><div class="w-min">${Math.round(data.daily.temperature_2m_min[i])}</div><div class="w-wind">${wind}m/s</div></div>`;
+            wBox.innerHTML += `
+                <div class="w-item">
+                    <span class="w-date">${i===0?'今日':days[d.getDay()]}</span>
+                    <span class="w-icon">${weatherIcons[data.daily.weather_code[i]]||"☀️"}</span>
+                    <span class="w-max">${Math.round(data.daily.temperature_2m_max[i])}°</span>
+                    <span class="w-min">${Math.round(data.daily.temperature_2m_min[i])}°</span>
+                    <span class="w-wind">🌀${Math.round(data.daily.wind_speed_10m_max[i])}</span>
+                </div>
+            `;
         }
-        document.getElementById('sun-times-inline').innerText = `🌅${data.daily.sunrise[0].split('T')[1]} 🌇${data.daily.sunset[0].split('T')[1]}`;
     }
 
     function renderPikmin() {
-        const now = new Date(), key = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-        const d = PIKMIN_MONTHLY[key], content = document.getElementById('pikmin-content');
-        if(!d) return;
-        document.getElementById('pikmin-title').textContent = `🌿 ${d.eventName}`;
-        content.innerHTML = d.cards.map(c => `<div class="p-card"><div class="p-label">${c.label}</div><img src="${c.url}"></div>`).join('');
+        const now = new Date();
+        const key = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        const d = PIKMIN_MONTHLY[key];
+        const content = document.getElementById('pikmin-content');
+        const title = document.getElementById('pikmin-title');
+        
+        if (!d) { 
+            content.innerHTML = `<div style="text-align:center; padding:15px; color:#aaa; font-size:0.75rem;">📋 ${now.getMonth()+1}月のデータは未登録です</div>`; 
+            return; 
+        }
+        
+        title.textContent = `🌿 ${d.eventName}`;
+        content.innerHTML = d.cards.filter(c => c.url).map(c => `
+            <div class="p-card">
+                <div class="p-label">${c.label}</div>
+                <img src="${c.url}" alt="${c.label}">
+            </div>
+        `).join('');
     }
 
-    updateClock(); setInterval(updateClock, 60000);
-    renderPikmin(); renderQuote(); renderNextMatch();
-    navigator.geolocation.getCurrentPosition(
-        pos => fetchWeather(pos, false),
-        () => fetchWeather({coords:{latitude:35.5,longitude:140.1}}, true),
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 600000 }
-    );
+    function initGeolocation() {
+        const fallbackPos = { coords: { latitude: 35.5206, longitude: 140.0881 } }; // 市原市周辺
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => fetchWeather(pos, false),
+                (err) => { console.warn("位置情報取得失敗:", err); fetchWeather(fallbackPos, true); },
+                { timeout: 6000 }
+            );
+        } else {
+            fetchWeather(fallbackPos, true);
+        }
+    }
+
+    updateClock(); setInterval(updateClock, 30000);
+    renderQuote();
+    initGeolocation();
+    renderPikmin();
+    renderNextMatch();
 </script>
 </body>
 </html>
